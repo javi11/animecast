@@ -23,7 +23,7 @@ class Service {
         const episode = result && result.length > 0 && result[0];
         let streamLink = episode && episode.streamLink;
         
-        if(plugin.episode.replace) {
+        if(plugin.episode.remove) {
           streamLink = streamLink.replace(plugin.episode.remove, '')
         }
         
