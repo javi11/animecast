@@ -1,0 +1,45 @@
+{
+ "catalog": {
+  "url": "http://animeflv.net/animes/",
+  "startTag": "div.aboxy_lista",
+  "pagination": "p",
+  "limit": 20,
+  "scrapper": {
+   "title": ".titulo@html",
+   "image": ".portada@data-original",
+   "link": ".titulo@href",
+   "description": ".sinopsis@html",
+   "categories": [{
+    "startTag": "div.generos_links a",
+    "name": "@html",
+    "link": "@href"
+   }]
+  }
+ },
+ "show": {
+  "startTag": ".anime_box",
+  "scrapper": {
+   "description": ".sinopsis",
+   "image": ".portada@src",
+   "categories": [{
+    "startTag": "ul.ainfo a",
+    "name": "@html",
+    "link": "@href"
+   }],
+   "episodes": [{
+    "startTag": "ul.anime_episodios li",
+    "title": "a@html",
+    "link": "a@href"
+   }]
+  }
+ },
+ "episode": {
+  "startTag": ".epi_cont",
+  "remove": "https://animeflv.net/d.php?url=",
+  "urlEncoded": true,
+  "scrapper": {
+   "streamLink": "a.op_download@href",
+   "uploadDate": "#detalle_fecha"
+  }
+ }
+}
