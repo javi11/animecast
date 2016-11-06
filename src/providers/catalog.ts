@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Scrapper } from './scrapper';
 import { Show } from '../models/show';
-import 'rxjs/add/operator/map';
 
 /*
   Generated class for the Catalog provider.
@@ -13,51 +12,51 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class Catalog {
 
-  public catalog: Array<Show>;
-  public show: any;
+  constructor(public http: Http) {}
 
-  constructor(public http: Http, public scrapper: Scrapper) {
-    this.http = http;
-    this.scrapper = scrapper;
-  }
+  find(host: string, page: number): Promise<Array<Show>> {
+    let scrapper;
 
-  find(host: string, page: number) {
-    this.http
+    return this.http
       .get(`assets/plugins/${host}.json`)
       .map(res => res.json())
-      .subscribe(plugin => {
-        if (!plugin) {
-          console.error(`${plugin} not found`);
-          return;
-        };
+      .toPromise()
+      .then(plugin => {
+        scrapper = new Scrapper();
+        scrapper.setPlugin(plugin.catalog);
 
-        this.http
-          .get(`${plugin.catalog.url}?${plugin.catalog.pagination}=${page}`).subscribe(
-          html => {
-            this.catalog = this.scrapper.scrappe(html['_body'], plugin.catalog);
-          },
-          err => console.error(err));
-      },
-      err => console.error(err));
+        return this.http
+          .get(`${plugin.catalog.url}?${plugin.catalog.pagination}=${page}`)
+          .toPromise();
+      })
+      .then(html => {
+        return Promise.resolve(scrapper.startScrappe(html['_body']));
+      })
+      .catch(this.handleError);
   }
 
-  findById(host: string, url: string) {
-    this.http
+  findById(host: string, url: string): Promise<Show> {
+    let scrapper;
+
+    return this.http
       .get(`assets/plugins/${host}.json`)
       .map(res => res.json())
-      .subscribe(plugin => {
-        if (!plugin) {
-          console.error(`${plugin} not found`);
-          return;
-        };
+      .toPromise()
+      .then(plugin => {
+        scrapper = new Scrapper();
+        scrapper.setPlugin(plugin.show);
 
-        this.http
-          .get(url).subscribe(
-          html => {
-            this.show = this.scrapper.scrappe(html['_body'], plugin.show);
-          },
-          err => console.error(err));
-      },
-      err => console.error(err));
+        return this.http
+          .get(url)
+          .toPromise();
+      })
+      .then(html => {
+        return Promise.resolve(scrapper.startScrappe(html['_body']));
+      })
+  }
+
+  private handleError(error: any): Promise<any> {
+    console.error('An error occurred', error);
+    return Promise.reject(error.message || error);
   }
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { Http} from '@angular/http';
 import { Scrapper } from './scrapper';
-import 'rxjs/add/operator/map';
+import { Izanagi } from './servers/izanagi';
 
 /*
   Generated class for the Episode provider.
@@ -12,57 +12,74 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class Episode {
 
-  public episode: any;
+  constructor(public http: Http) {}
 
-  constructor(public http: Http, public scrapper: Scrapper) {
-    this.http = http;
-    this.scrapper = scrapper;
-  }
+  findById(host: string, url: string) : Promise <any> {
+    let scrapper;
 
-  findById(host, url) {
-    this.http
+    return this.http
       .get(`assets/plugins/${host}.json`)
       .map(res => res.json())
-      .subscribe(plugin => {
-        if (!plugin) {
-          console.error(`${plugin} not found`);
-          return;
-        };
+      .toPromise()
+      .then(plugin => {
+        scrapper = new Scrapper();
+        scrapper.setPlugin(plugin.episode);
 
-        this.http
-          .get(url).subscribe(
-          html => {
-            this.episode = this.scrapper.scrappe(html['_body'], plugin.episode);
-            if(this.episode) {
-              this.episode = this.episode[0];
+        return this.http
+          .get(url)
+          .toPromise();
+      })
+      .then(html => {
+            let episode:any = scrapper.startScrappe(html['_body']);
+            if(episode) {
+              episode = episode[0];
               /* Especial modifications especific for every plugin */
-              if(plugin.episode.modifications.length > 0) {
-                plugin.episode.modifications.forEach(modification => {
-                  this.episode[modification.from] = this.modificationList(modification, this.episode[modification.from]);
+              if(scrapper.getPlugin().modifications.length > 0) {
+                scrapper.getPlugin().episode.modifications.forEach(modification => {
+                  episode[modification.from] = this.modificationList(modification, episode[modification.from]);
                 });
               }
-              console.log(this.episode);
+              return this.addStreamLink(episode);
             }
-          },
-          err => console.error(err));
-      },
-      err => console.error(err));
+      })
+      .catch(this.handleError);
   }
 
-  modificationList(modification, value) {
+  addStreamLink(episode: any) {
+      let result = Promise.resolve(episode);
+
+      switch (true) {
+        case (episode.streamLink.indexOf('izanagi') > -1):
+          let izanagi = new Izanagi(this.http);
+          result = izanagi.setStreamLink(episode);
+          break;
+      }
+
+      return result;
+  }
+
+  modificationList(modification: any, value: string) {
     let result:any = value;
     switch(modification.action) {
       case 'remove':
         result = value.replace(modification.what,'');
       break;
       case 'replace':
-        result = value.replace(modification.what, modification.with);
+        result = value.replace(modification.what, modification.for);
       break;
       case 'urlDecode':
         result = decodeURIComponent(value);
       break;
+      case 'prepend':
+        result = `${modification.what}${value}`;
+      break;
     }
     return result;
+  }
+
+  private handleError(error: any): Promise<any> {
+    console.error('An error occurred', error);
+    return Promise.reject(error.message || error);
   }
 
 }

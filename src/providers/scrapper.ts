@@ -11,10 +11,23 @@ import jquery from 'jquery';
 @Injectable()
 export class Scrapper {
 
-  constructor() {
+  private plugin: any;
+
+  constructor() {}
+
+  public startScrappe(html: any) {
+    this.scrappe(html, this.plugin);
   }
 
-  public scrappe(html: any, find: any):Array<any> {
+  setPlugin(plugin: any) {
+    this.plugin = plugin;
+  }
+
+  public getPlugin() {
+    return this.plugin;
+  }
+
+  private scrappe(html: any, find: any):Array<any> {
     if(!html) {
       console.error('html is empty on', find);
       return [];
@@ -37,9 +50,8 @@ export class Scrapper {
           element[key] = this.scrappe(item, find[key]);
         } else {
           if(this.isRegex(find[key])) {
-              var regex = new RegExp(find[key].split('regexp:')[1]);
+              var regex = new RegExp(find[key].split('regex:')[1]);
               var matches = regex.exec(html);
-              console.log(matches);
               element[key] = matches.length > 0 && matches[1];
           } else {
             let [findTag, extract] = find[key].split('@');
