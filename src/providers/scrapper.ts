@@ -1,6 +1,7 @@
 /// <reference path="../declarations.d.ts" />
 import { Injectable } from '@angular/core';
 import jquery from 'jquery';
+import _ from 'lodash';
 
 /*
   Generated class for the Scrapper provider.
@@ -16,7 +17,7 @@ export class Scrapper {
   constructor() {}
 
   public startScrappe(html: any) {
-    this.scrappe(html, this.plugin);
+    return this.scrappe(html, this.plugin);
   }
 
   setPlugin(plugin: any) {
@@ -36,8 +37,9 @@ export class Scrapper {
     const data:any = jquery(html);
     const startHtml:any = data.find(find.startTag);
     let result: Array<any> = [];
-    find = find.scrapper;
+    const transform = find.transform;
 
+    find = find.scrapper;
     if(!startHtml) {
       console.error(`${find.startTag} not found on the html`);
       return [];
@@ -66,11 +68,35 @@ export class Scrapper {
       });
       result.push(element);
     });
+    if(transform) {
+      Object.keys(transform).forEach(transformation =>{
+        result.forEach((item, $index) => {
+          if(item[transformation]) {
+            try {
+              let compiled = _.template(transform[transformation]);
+              item[transformation] = compiled(item);
+              result[$index] = item;
+            } catch(err) {
+              console.error('Error on transformation, ', transformation, err);
+            }
+          }
+        });
+      });
+    }
     return result;
   }
 
   private getResource(item, extract) {
-    return (extract === 'html')? item.html() : item.attr(extract);
+    let value:any;
+
+    const extractAtributtes:Array<string> = extract.split('||');
+    for(let i:number = 0; i < extractAtributtes.length; i++) {
+      value = (extractAtributtes[i] === 'html')? item.html() : item.attr(extractAtributtes[i]);
+      if(value){
+        break;
+      }
+    }
+    return value
   }
 
   private isRegex(findTag) {

@@ -45,13 +45,17 @@ export class Catalog {
       .then(plugin => {
         scrapper = new Scrapper();
         scrapper.setPlugin(plugin.show);
-
         return this.http
-          .get(url)
+          .get(`${plugin.url}${url}`)
           .toPromise();
       })
       .then(html => {
-        return Promise.resolve(scrapper.startScrappe(html['_body']));
+        const show = scrapper.startScrappe(html['_body']);
+       console.info(show);
+        return show && show[0] ? Promise.resolve(show[0]) : this.handleError({
+          message: `${url} can't be scrapped`,
+          code: '500'
+        });
       })
   }
 

@@ -1,0 +1,24 @@
+.home {
+  .gallery {
+    display: -ms-flexbox;
+    -ms-flex-wrap: wrap;
+    -ms-flex-direction: column;
+    -webkit-flex-flow: row wrap;
+    flex-flow: row wrap;
+    display: -webkit-box;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    .item {
+      -webkit-box-flex: auto;
+      -ms-flex: auto;
+      width: 180px;
+      margin: .5vw;
+    }
+    @media screen and (max-width: 400px) {
+      .item {
+        width: 140px;
+      }
+    }
+  }
+}

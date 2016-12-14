@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>AnimeCast</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding class="home">
+  <ion-list>
+    <ion-item *ngFor="let show of catalog;">
+      <ion-thumbnail item-left>
+        <img [src]="show.image" >
+      </ion-thumbnail>
+      <h2>{{show.title}}</h2>
+      <p>{{show.description}}</p>
+      <button ion-button clear item-right (click)="goToShow($event, show)">View</button>
+    </ion-item>
+  </ion-list>
+</ion-content>
