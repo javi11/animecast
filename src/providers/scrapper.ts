@@ -71,7 +71,6 @@ export class Scrapper {
     if(transform) {
       Object.keys(transform).forEach(transformation =>{
         result.forEach((item, $index) => {
-          if(item[transformation]) {
             try {
               let compiled = _.template(transform[transformation]);
               item[transformation] = compiled(item);
@@ -79,7 +78,6 @@ export class Scrapper {
             } catch(err) {
               console.error('Error on transformation, ', transformation, err);
             }
-          }
         });
       });
     }

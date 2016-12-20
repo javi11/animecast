@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Scrapper } from './scrapper';
+import { ApiMapping } from './api-mapping';
 import { Show } from '../models/show';
 
 /*
@@ -16,42 +17,58 @@ export class Catalog {
 
   find(host: string, page: number): Promise<Array<Show>> {
     let scrapper;
+    let isHtml:boolean = false;
 
     return this.http
       .get(`assets/plugins/${host}.json`)
       .map(res => res.json())
       .toPromise()
       .then(plugin => {
-        scrapper = new Scrapper();
+        if(plugin.catalog.scrapper) {
+          scrapper = new Scrapper();
+          isHtml = true;
+        } else {
+          scrapper =new ApiMapping();
+        }
+        
         scrapper.setPlugin(plugin.catalog);
 
         return this.http
-          .get(`${plugin.catalog.url}?${plugin.catalog.pagination}=${page}`)
+          .get(`${plugin.catalog.url}?${plugin.catalog.pagination}=${page}${plugin.catalog.extrUrlParameters}`)
           .toPromise();
       })
-      .then(html => {
-        return Promise.resolve(scrapper.startScrappe(html['_body']));
+      .then(data => {
+        let result = [];
+        result = isHtml? scrapper.startScrappe(data['_body']) : scrapper.startMapping(data.json());
+        return Promise.resolve(result);
       })
       .catch(this.handleError);
   }
 
   findById(host: string, url: string): Promise<Show> {
     let scrapper;
+    let isHtml:boolean = false;
 
     return this.http
       .get(`assets/plugins/${host}.json`)
       .map(res => res.json())
       .toPromise()
       .then(plugin => {
-        scrapper = new Scrapper();
+        if(plugin.show.scrapper) {
+          scrapper = new Scrapper();
+          isHtml = true;
+        } else {
+          scrapper =new ApiMapping();
+        }
+        
         scrapper.setPlugin(plugin.show);
         return this.http
           .get(`${plugin.url}${url}`)
           .toPromise();
       })
-      .then(html => {
-        const show = scrapper.startScrappe(html['_body']);
-       console.info(show);
+      .then(data => {
+        const show = isHtml? scrapper.startScrappe(data['_body']) : scrapper.startMapping(data.json());
+        console.log('Show -->', show);
         return show && show[0] ? Promise.resolve(show[0]) : this.handleError({
           message: `${url} can't be scrapped`,
           code: '500'

@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar dark>
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
@@ -7,15 +7,22 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding class="home">
-  <ion-list>
-    <ion-item *ngFor="let show of catalog;">
-      <ion-thumbnail item-left>
-        <img [src]="show.image" >
-      </ion-thumbnail>
-      <h2>{{show.title}}</h2>
-      <p>{{show.description}}</p>
-      <button ion-button clear item-right (click)="goToShow($event, show)">View</button>
-    </ion-item>
-  </ion-list>
+<ion-content padding class="gallery">
+  <ion-row responsive-sm *ngFor="let item of catalog">
+    <ion-col *ngFor="let show of item" width-25>
+      <ion-card>
+        <img [src]="show.image" (click)="goToShow($event, show)">
+        <ion-item>
+          {{show.title}}
+          <button ion-button (click)="presentPopover($event)" item-right clear color="light">
+            <ion-icon name="md-more" large></ion-icon>
+          </button>
+        </ion-item>
+      </ion-card>
+
+    </ion-col>
+  </ion-row>
+  <ion-infinite-scroll (ionInfinite)="loadMore($event)">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>
