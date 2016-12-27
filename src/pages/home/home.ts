@@ -33,7 +33,6 @@ export class Home {
       .then(newItems => {
         this.page++;
         this.loading.dismiss();
-        console.log('hola', this.catalog);
         this.catalog = this.buildGallery(this.catalog, newItems, 4);
         
         return Promise.resolve();
@@ -55,7 +54,6 @@ export class Home {
         gallery[row][col] = newItems[i];
         col++;
       }
-      console.log(gallery);
       return gallery;
   }
 

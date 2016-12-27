@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{show.title}}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-list *ngFor="let episode of show.episodes">
+    <ion-item-sliding>
+      <ion-item>
+        <h2>{{episode.title}}</h2>
+        <ion-icon name="arrow-dropright-circle" item-right></ion-icon>
+      </ion-item>
+      <ion-item-options side="left">
+        <button ion-button color="primary">
+                <ion-icon name="cloud-download"></ion-icon>
+                Download
+              </button>
+        <button ion-button color="secondary">
+                <ion-icon name="play"></ion-icon>
+                Play
+              </button>
+      </ion-item-options>
+      <ion-item-options side="right">
+        <button ion-button color="primary">
+                <ion-icon name="eye"></ion-icon>
+                Mark
+              </button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+</ion-content>

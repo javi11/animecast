@@ -1,15 +1,27 @@
 import { NgModule } from '@angular/core';
+import {CacheService} from "ionic-cache/ionic-cache";
 import { IonicApp, IonicModule } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { Home } from '../pages/home/home';
 import { ShowDetails } from '../pages/show/show';
+import { Details } from '../pages/show/details/details';
+import { Episodes } from '../pages/show/episodes/episodes';
+import { ElasticHeader } from '../components/elastic-header/elastic-header';
+import { Scrapper } from '../providers/scrapper';
 import './rxjs-extensions';
 
 @NgModule({
   declarations: [
     MyApp,
     Home,
-    ShowDetails
+    ShowDetails,
+    Details,
+    Episodes,
+    ElasticHeader
+  ],
+  providers: [
+    CacheService,
+    Scrapper
   ],
   imports: [
     IonicModule.forRoot(MyApp)
@@ -18,7 +30,9 @@ import './rxjs-extensions';
   entryComponents: [
     MyApp,
     Home,
-    ShowDetails
+    ShowDetails,
+    Details,
+    Episodes
   ]
 })
 export class AppModule {}
