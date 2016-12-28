@@ -19,9 +19,6 @@ export class Catalog {
   find(host: string, page: number): Promise<Array<Show>> {
     let scrapper;
     let isHtml:boolean = false;
-    const cacheKey = `host:${host},page:${page}`;
-    console.info('cachekey', cacheKey);
-    return this.cache.getItem(cacheKey).catch(() => {
       return this.getPlugin(host)
         .then(plugin => {
           if(plugin.catalog.scrapper) {
@@ -40,10 +37,9 @@ export class Catalog {
         .then(data => {
           let result = [];
           result = isHtml? scrapper.startScrappe(data['_body']) : scrapper.startMapping(data.json());
-          return this.cache.saveItem(cacheKey, result);
+          return result;
         })
         .catch(this.handleError);
-    });
   }
 
   findById(host: string, url: string): Promise<Show> {
@@ -68,7 +64,7 @@ export class Catalog {
         })
         .then(data => {
           const show = isHtml? scrapper.startScrappe(data['_body']) : scrapper.startMapping(data.json());
-          return show && show[0] ? this.cache.saveItem(cacheKey, show[0]) : this.handleError({
+          return show && show[0] ?  show[0] : this.handleError({
             message: `${url} can't be scrapped`,
             code: '500'
           });

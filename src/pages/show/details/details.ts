@@ -1,40 +1,15 @@
-import { Component } from '@angular/core';
-import { Catalog } from '../../../providers/Catalog';
-import { NavParams, LoadingController, Loading } from 'ionic-angular';
+import { Component, OnChanges, SimpleChange } from '@angular/core';
 
 @Component({
- templateUrl: 'details.html',
-  providers: [
-    Catalog
-  ]
+ templateUrl: 'details.html'
 })
-export class Details {
+export class Details implements OnChanges {
   show: any = {};
-  loading:Loading;
-  error: any;
 
-  constructor(navParams: NavParams, public loadingCtrl: LoadingController, public catalogService: Catalog) {
-    const data = navParams.data;
-    this.loading = this.createLoader();
+  constructor() {}
 
-    this.loading.present();
-    catalogService
-      .findById(data.server, data.showLink)
-      .then(show => {
-        this.show = show;
-        console.log('Show -->', show);
-        this.loading.dismiss();
-      })
-      .catch(error =>{
-        this.error = error; 
-        this.loading.dismiss();
-      });
-  }
-
-   createLoader() {
-    return this.loadingCtrl.create({
-      content: 'Loading data...'
-    });
+  ngOnChanges(changes: {[propKey: string]: SimpleChange}) {
+    console.log(changes);
   }
 
 }
