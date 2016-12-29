@@ -1,16 +1,11 @@
 <ion-header>
-  <ion-navbar *navbar>
-    <ion-title>{{show.title}}</ion-title>
+  <ion-navbar>
   </ion-navbar>
 </ion-header>
-<ion-navbar *navbar>
-  <ion-title>{{show.title}}</ion-title>
-</ion-navbar>
-
 <ion-content elastic-header class="elastic-header">
-  <div class="background-image" [ngStyle]="{'background-image': 'url(' + show.wallpaper + ')'}"></div>
+  <div class="background-image" [ngStyle]="{'background-image': 'url(' + (show.wallpaper | async) + ')'}"></div>
   <div class="main-content">
-    <h2>{{show.title}}</h2>
-    <p>{{show.description}}</p>
+    <h2>{{show.title | async}}</h2>
+    <p>{{show.description | async}}</p>
   </div>
 </ion-content>
