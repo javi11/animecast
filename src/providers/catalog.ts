@@ -3,7 +3,6 @@ import { Http } from '@angular/http';
 import { Scrapper } from './scrapper';
 import { ApiMapping } from './api-mapping';
 import { Show } from '../pages/show/show';
-import { CacheService } from "ionic-cache/ionic-cache";
 
 /*
   Generated class for the Catalog provider.
@@ -14,7 +13,7 @@ import { CacheService } from "ionic-cache/ionic-cache";
 @Injectable()
 export class Catalog {
 
-  constructor(public http: Http, public cache: CacheService) {}
+  constructor(public http: Http) {}
 
   find(host: string, page: number): Promise<Array<Show>> {
     let scrapper;

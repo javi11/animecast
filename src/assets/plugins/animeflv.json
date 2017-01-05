@@ -1,0 +1,74 @@
+{
+  "url": "http://animeflv.net",
+  "catalog": {
+    "url": "http://animeflv.net/animes/?escritorio=1",
+    "startTag": "div.aboxy_lista",
+    "pagination": "p",
+    "limit": 20,
+    "transform": {
+      "link": "<%= link %>/?escritorio=1"
+    },
+    "scrapper": {
+      "title": ".titulo@html",
+      "image": ".portada@data-original",
+      "link": ".titulo@href",
+      "description": ".sinopsis@html",
+      "categories": {
+        "startTag": "div.generos_links a",
+        "scrapper": {
+          "name": "@html",
+          "link": "@href"
+        }
+      }
+    }
+  },
+  "show": {
+    "startTag": ".anime_box",
+    "transform": {
+      "type": "<%= type.replace('<b>Tipo:</b> ','') %>",
+      "status": "<%= status.replace('<b>Estado:</b> <span class=\"serie_estado_2\">','').replace('</span>','') %>",
+      "air": "<%= date.replace('<b>Fecha de Inicio:</b> ','') %>"
+    },
+    "scrapper": {
+      "description": ".sinopsis@html",
+      "image": ".portada@src",
+      "type": "ul.ainfo li:first@html",
+      "status": "ul.ainfo li:nth-child(2)@html",
+      "air": "ul.ainfo li:nth-child(4)@html",
+      "categories": {
+        "startTag": "ul.ainfo a",
+        "scrapper": {
+          "name": "@html",
+          "link": "@href"
+        }
+      },
+      "episodes": {
+        "startTag": "ul.anime_episodios li",
+        "scrapper": {
+          "title": "a@html",
+          "link": "a@href"
+        }
+      }
+    }
+  },
+  "episode": {
+    "startTag": ".epi_cont",
+    "modifications": [{
+        "from": "streamLink",
+        "what": "https://s2.animeflv.com/izanagi.php?id=",
+        "action": "prepend"
+      },
+      {
+        "from": "streamLink",
+        "what": "\\",
+        "for": "",
+        "action": "replace"
+      }
+    ],
+    "scrapper": {
+      "streamLink": "regex:embed_izanagi.php\\?key=(.*?)\"",
+      "uploadDate": "#detalle_fecha@html"
+    }
+  }
+}
+z

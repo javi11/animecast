@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { CacheService } from "ionic-cache/ionic-cache";
 import { IonicApp, IonicModule } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { Home } from '../pages/home/home';
@@ -22,7 +21,6 @@ import './rxjs-extensions';
     Gallery
   ],
   providers: [
-    CacheService,
     Scrapper
   ],
   imports: [

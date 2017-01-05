@@ -1,0 +1,63 @@
+{
+  "url": "http://animemovil.com",
+  "catalog": {
+    "url": "http://animemovil.com/_API/",
+    "extrUrlParameters": "&src=animesRecientes",
+    "startTag": "items",
+    "pagination": "offset",
+    "limit": 15,
+    "transform": {
+      "image": "http://img.animemovil.com/w440-h250-c/<%= image %>",
+      "link": "/<%= link %>"
+    },
+    "api": {
+      "title": "title",
+      "image": "img",
+      "link": "url"
+    }
+  },
+  "show": {
+    "startTag": "article",
+    "transform": {
+      "description": "<%= description.replace(/<[^>]+>/ig,\"\") %>",
+      "categories": "<%= categories.replace(/<[^>]+>/ig,\"\") %>",
+      "status": "<%= status.replace(/<[^>]+>/ig,\"\") %>",
+      "air": "<%= air.replace(/<[^>]+>/ig,\"\") %>",
+      "wallpaper": "<%= image.replace('portadas','w440-h250-c') %>"
+    },
+    "scrapper": {
+      "title": ".InfoTitulo span h1@html",
+      "description": ".InfoSipnosis span p@html",
+      "image": ".portada img@src||data-cfsrc",
+      "status": ".EstadoFinalizado span@html",
+      "air": ".InfoEmision span@html",
+      "categories": ".InfoGneros span@html",
+      "episodes": {
+        "startTag": "#lista li",
+        "scrapper": {
+          "title": "a@title",
+          "link": "a@href"
+        }
+      }
+    }
+  },
+  "episode": {
+    "startTag": ".epi_cont",
+    "modifications": [{
+        "from": "streamLink",
+        "what": "https://s2.animeflv.com/izanagi.php?id=",
+        "action": "prepend"
+      },
+      {
+        "from": "streamLink",
+        "what": "\\",
+        "for": "",
+        "action": "replace"
+      }
+    ],
+    "scrapper": {
+      "streamLink": "regex:embed_izanagi.php\\?key=(.*?)\"",
+      "uploadDate": "#detalle_fecha@html"
+    }
+  }
+}

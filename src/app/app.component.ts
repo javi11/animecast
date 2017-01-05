@@ -2,7 +2,6 @@ import { Component, ViewChild } from '@angular/core';
 import { Nav, Platform } from 'ionic-angular';
 import { StatusBar } from 'ionic-native';
 import { Home } from '../pages/home/home';
-import {CacheService} from "ionic-cache/ionic-cache";
 
 @Component({
   templateUrl: 'app.html'
@@ -14,9 +13,8 @@ export class MyApp {
 
   pages: Array<{title: string, component: any}>;
 
-  constructor(public platform: Platform, cache: CacheService) {
+  constructor(public platform: Platform) {
     this.initializeApp();
-    cache.setDefaultTTL(60 * 60);
 
     // used for an example of ngFor and navigation
     this.pages = [
