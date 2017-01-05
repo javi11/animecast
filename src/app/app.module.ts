@@ -1,12 +1,13 @@
 import { NgModule } from '@angular/core';
-import {CacheService} from "ionic-cache/ionic-cache";
+import { CacheService } from "ionic-cache/ionic-cache";
 import { IonicApp, IonicModule } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { Home } from '../pages/home/home';
-import { ShowDetails } from '../pages/show/show';
+import { ShowDetails } from '../pages/show/show.component';
 import { Details } from '../pages/show/details/details';
 import { Episodes } from '../pages/show/episodes/episodes';
 import { ElasticHeader } from '../components/elastic-header/elastic-header';
+import { Gallery } from '../components/gallery/gallery';
 import { Scrapper } from '../providers/scrapper';
 import './rxjs-extensions';
 
@@ -17,7 +18,8 @@ import './rxjs-extensions';
     ShowDetails,
     Details,
     Episodes,
-    ElasticHeader
+    ElasticHeader,
+    Gallery
   ],
   providers: [
     CacheService,

@@ -7,21 +7,8 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding class="gallery">
-  <ion-row responsive-sm *ngFor="let item of catalog">
-    <ion-col *ngFor="let show of item" width-25>
-      <ion-card>
-        <img [src]="show.image" (click)="goToShow($event, show)">
-        <ion-item>
-          {{show.title}}
-          <button ion-button (click)="presentPopover($event)" item-right clear color="light">
-            <ion-icon name="md-more" large></ion-icon>
-          </button>
-        </ion-item>
-      </ion-card>
-
-    </ion-col>
-  </ion-row>
+<ion-content padding>
+  <gallery [newItems]="newItems" [rowSize]="4" [itemAction]="goToShowCallback"></gallery>
   <ion-infinite-scroll (ionInfinite)="loadMore($event)">
     <ion-infinite-scroll-content></ion-infinite-scroll-content>
   </ion-infinite-scroll>

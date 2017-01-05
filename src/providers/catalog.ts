@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Scrapper } from './scrapper';
 import { ApiMapping } from './api-mapping';
-import { Show } from '../models/show';
+import { Show } from '../pages/show/show';
 import { CacheService } from "ionic-cache/ionic-cache";
 
 /*

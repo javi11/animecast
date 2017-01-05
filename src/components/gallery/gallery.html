@@ -1,0 +1,15 @@
+<div class="gallery">
+  <ion-row responsive-sm *ngFor="let item of items">
+    <ion-col *ngFor="let params of item" width-25>
+      <ion-card>
+        <img [src]="params.image" (click)="itemAction($event, params)">
+        <ion-item>
+          {{params.title}}
+          <button ion-button item-right clear color="light">
+            <ion-icon name="md-more" large></ion-icon>
+          </button>
+        </ion-item>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+</div>

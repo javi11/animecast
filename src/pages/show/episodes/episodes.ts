@@ -1,40 +1,13 @@
 import { Component } from '@angular/core';
-import { Catalog } from '../../../providers/Catalog';
-import { NavParams, LoadingController, Loading } from 'ionic-angular';
+import { NavParams} from 'ionic-angular';
 
 @Component({
- templateUrl: 'episodes.html',
-  providers: [
-    Catalog
-  ]
+ templateUrl: 'episodes.html'
 })
 export class Episodes {
-  show: any = {};
-  loading:Loading;
-  error: any;
+  episodes:any = {};
 
-  constructor(navParams: NavParams, public loadingCtrl: LoadingController, public catalogService: Catalog) {
-    const data = navParams.data;
-    this.loading = this.createLoader();
-
-    this.loading.present();
-    catalogService
-      .findById(data.server, data.showLink)
-      .then(show => {
-        this.show = show;
-        console.log('Show -->', show);
-        this.loading.dismiss();
-      })
-      .catch(error =>{
-        this.error = error; 
-        this.loading.dismiss();
-      });
+  constructor(navParams: NavParams)  {
+    this.episodes = navParams.data.episodes;
   }
-
-   createLoader() {
-    return this.loadingCtrl.create({
-      content: 'Loading data...'
-    });
-  }
-
 }

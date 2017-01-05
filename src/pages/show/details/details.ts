@@ -1,18 +1,16 @@
-import { Component } from '@angular/core';
-import { ShowService } from '../show-service';
-import { Observable } from 'rxjs/Observable';
+import { Component, Input } from '@angular/core';
+import { Subscription }   from 'rxjs/Subscription';
+import { ShowService } from '../show.service';
+import { Show } from '../show';
 
 @Component({
- templateUrl: 'details.html',
- providers: [ShowService]
+ templateUrl: 'details.html'
 })
-export class Details  {
-  show:Observable<any>;
+export class Details{
+  @Input() show:Show = {};
+  subscription: Subscription;
 
-  constructor(public showService:ShowService) {}
-
-  ngOnInit() {
-    this.show = this.showService.show;
+  constructor(public showService:ShowService)  {
+    this.subscription = this.showService.show$.subscribe(show => this.show = show);
   }
-
 }
