@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Scrapper } from './scrapper';
 import { ApiMapping } from './api-mapping';
-import { Show } from '../models/show';
+import { Show } from '../pages/show/show';
 import { CacheService } from "ionic-cache/ionic-cache";
 
 /*
@@ -45,9 +45,6 @@ export class Catalog {
   findById(host: string, url: string): Promise<Show> {
     let scrapper;
     let isHtml:boolean = false;
-    const cacheKey = `host:${host},url:${url}`;
-
-    return this.cache.getItem(cacheKey).catch(() => {
       return this.getPlugin(host)
         .then(plugin => {
           if(plugin.show.scrapper) {
@@ -64,12 +61,11 @@ export class Catalog {
         })
         .then(data => {
           const show = isHtml? scrapper.startScrappe(data['_body']) : scrapper.startMapping(data.json());
-          return show && show[0] ?  show[0] : this.handleError({
+          return show && show[0] ? show[0] : this.handleError({
             message: `${url} can't be scrapped`,
             code: '500'
           });
-        })
-    });
+        });
   }
 
   getPlugin(host):Promise<any> {

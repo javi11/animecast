@@ -1,15 +1,16 @@
-import { Component, OnChanges, SimpleChange } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Subscription }   from 'rxjs/Subscription';
+import { ShowService } from '../show.service';
+import { Show } from '../show';
 
 @Component({
  templateUrl: 'details.html'
 })
-export class Details implements OnChanges {
-  show: any = {};
+export class Details{
+  @Input() show:Show = {};
+  subscription: Subscription;
 
-  constructor() {}
-
-  ngOnChanges(changes: {[propKey: string]: SimpleChange}) {
-    console.log(changes);
+  constructor(public showService:ShowService)  {
+    this.subscription = this.showService.show$.subscribe(show => this.show = show);
   }
-
 }

@@ -1,11 +1,10 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>{{show.title}}</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
-  <ion-list *ngFor="let episode of show.episodes">
+  <ion-list *ngFor="let episode of episodes">
     <ion-item-sliding>
       <ion-item>
         <h2>{{episode.title}}</h2>
