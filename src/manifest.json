@@ -1,6 +1,6 @@
 {
-  "name": "Animecast",
-  "short_name": "Animecast",
+  "name": "Ionic",
+  "short_name": "Ionic",
   "start_url": "index.html",
   "display": "standalone",
   "icons": [{

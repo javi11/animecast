@@ -22,9 +22,17 @@ $card-md-title-text-color: $base-color !default;
 $card-md-text-color: $base-color !default;
 $item-wp-paragraph-text-color: $base-color !default;
 $toolbar-background: lighten($gray-darker, 10%) !default;
+$tabs-md-background: lighten($gray-darker, 10%) !default;
+$tabs-md-tab-text-color: #e4e4e4;
+$tabs-md-tab-icon-color: #e4e4e4;
 $card-md-header-color: lighten($gray-darker, 5%) !default;
 $item-md-divider-background: lighten($gray-darker, 5%) !default;
 $list-background-color: lighten($gray-darker, 5%) !default;
+$item-ios-paragraph-text-color: $base-color !default;
+$item-md-paragraph-text-color: $base-color !default;
+$item-ios-divider-color: lighten($gray-darker, 5%) !default;
+$list-md-text-color: #e4e4e4;
+$list-md-border-color: lighten($gray-darker, 5%) !default;
 // Named Color Variables
 // --------------------------------------------------
 // Named colors makes it easy to reuse colors on various components.

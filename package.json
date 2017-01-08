@@ -3,17 +3,11 @@
   "author": "Ionic Framework",
   "homepage": "http://ionicframework.com/",
   "private": true,
-  "config": {
-    "ionic_source_map": "source-map"
-  },
   "scripts": {
+    "clean": "ionic-app-scripts clean",
     "build": "ionic-app-scripts build",
-    "watch": "ionic-app-scripts watch",
-    "serve:before": "watch",
-    "emulate:before": "build",
-    "deploy:before": "build",
-    "build:before": "build",
-    "run:before": "build"
+    "ionic:build": "ionic-app-scripts build",
+    "ionic:serve": "ionic-app-scripts serve"
   },
   "dependencies": {
     "@types/jquery": "^2.0.33",
@@ -36,8 +30,8 @@
     "jquery": "^3.1.1"
   },
   "devDependencies": {
-    "@ionic/app-scripts": "latest",
-    "typescript": "^2.0.3"
+    "@ionic/app-scripts": "0.0.47",
+    "typescript": "^2.0.9"
   },
   "description": "AnimeCast: An Ionic project",
   "cordovaPlugins": [
