@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, LoadingController, Loading } from 'ionic-angular';
+import { NavController, LoadingController, Loading, ToastController, Toast } from 'ionic-angular';
 import { Catalog } from '../../providers/Catalog';
 import { Scrapper } from '../../providers/scrapper';
 import { ShowDetails } from '../show/show.component';
@@ -14,21 +14,32 @@ import { ShowDetails } from '../show/show.component';
 })
 export class Home {
   newItems: Array<any> = [];
-  error: any;
   page:number = 0;
+  error:Toast;
   loading: Loading;
   public goToShowCallback: Function;
 
-  constructor(public navCtrl: NavController, public catalogService: Catalog, public loadingCtrl: LoadingController) {
-    this.getCatalog()
-      .catch(error => this.error = error);
-  }
+  constructor(public navCtrl: NavController, 
+    public catalogService: Catalog, 
+    public loadingCtrl: LoadingController, 
+    public toastCtrl: ToastController) {}
 
-  public ngOnInit(){
+  public ngOnInit():void {
+    this.getCatalog()
+      .catch(this.handleError.bind(this));
     this.goToShowCallback = this.goToShow.bind(this);
   }
 
-  getCatalog() {
+  ionViewWillLeave() {
+    if(this.error) {
+      // Prevent onDidDismiss to call again getCatalog.
+      this.error.onDidDismiss(()=>{});
+      
+      this.error.dismiss();
+    }
+  }
+
+  getCatalog():Promise<any> {
     this.loading = this.createLoader();
 
     this.loading.present();
@@ -42,24 +53,41 @@ export class Home {
       })
   }
 
-  goToShow(event, show) {
+  goToShow(event, show):void  {
     this.navCtrl.push(ShowDetails, {
       showLink: show.link
     });
   }
 
-  loadMore(infiniteScroll) {
+  loadMore(infiniteScroll):void  {
     this.getCatalog()
       .then(() => infiniteScroll.complete())
       .catch(error => {
-        this.error = error;
         infiniteScroll.complete();
+        this.handleError(error);
       });       
   }
 
-  createLoader() {
+  createLoader():Loading  {
     return this.loadingCtrl.create({
       content: 'Loading data...'
     });
+  }
+
+  handleError(message: any):void {
+    this.loading.dismiss();
+    this.error = this.toastCtrl.create({
+      message: message,
+      position: 'bottom',
+      closeButtonText: 'Try again',
+      showCloseButton: true
+    });
+
+    this.error.onDidDismiss(()=> {
+      this.getCatalog()
+      .catch(this.handleError.bind(this));
+    });
+
+    this.error.present();
   }
 }

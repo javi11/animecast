@@ -7,7 +7,10 @@ $gray-dark: #3A3F44 !default; // #333
 $gray: #52575C !default; // #555
 $gray-light: #7A8288 !default; // #999
 $gray-lighter: #999 !default; // #eee
+$white-dark: #e4e4e4 !default; // #eee
 $base-color: #C8C8C8 !default;
+$green-base: #69bb7b !default;
+$brown-base: #B59A7A !default;
 // Shared Variables
 // --------------------------------------------------
 // To customize the look and feel of this app, you can override
@@ -23,15 +26,17 @@ $card-md-text-color: $base-color !default;
 $item-wp-paragraph-text-color: $base-color !default;
 $toolbar-background: lighten($gray-darker, 10%) !default;
 $tabs-md-background: lighten($gray-darker, 10%) !default;
-$tabs-md-tab-text-color: #e4e4e4;
-$tabs-md-tab-icon-color: #e4e4e4;
+$tabs-md-tab-text-color: $white-dark;
+$tabs-md-tab-text-color-active: $green-base;
+$tabs-md-tab-icon-color: $white-dark;
+$tabs-md-tab-icon-color-active: $green-base;
 $card-md-header-color: lighten($gray-darker, 5%) !default;
 $item-md-divider-background: lighten($gray-darker, 5%) !default;
 $list-background-color: lighten($gray-darker, 5%) !default;
 $item-ios-paragraph-text-color: $base-color !default;
 $item-md-paragraph-text-color: $base-color !default;
 $item-ios-divider-color: lighten($gray-darker, 5%) !default;
-$list-md-text-color: #e4e4e4;
+$list-md-text-color: $white-dark;
 $list-md-border-color: lighten($gray-darker, 5%) !default;
 // Named Color Variables
 // --------------------------------------------------
@@ -40,7 +45,7 @@ $list-md-border-color: lighten($gray-darker, 5%) !default;
 // to match your app's branding. Ionic uses a Sass map of
 // colors so you can add, rename and remove colors as needed.
 // The "primary" color is the only required color in the map.
-$colors: ( primary: #387ef5, secondary: #32db64, danger: #f53d3d, light: #f4f4f4, dark: #222, favorite: #69BB7B);
+$colors: ( primary: #387ef5, secondary: #32db64, danger: #f53d3d, light: #f4f4f4, dark: #222, darklight: lighten($gray-darker, 5%), favorite: #69BB7B, green-base: $green-base, brown-base: $brown-base);
 // App Theme
 // --------------------------------------------------
 // Ionic apps can have different themes applied, which can

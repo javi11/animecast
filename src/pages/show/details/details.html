@@ -2,7 +2,7 @@
   <ion-navbar>
   </ion-navbar>
 </ion-header>
-<ion-content elastic-header class="elastic-header">
+<ion-content elastic-header class="elastic-header" [hidden]="!show.title">
   <div class="background-image" [ngStyle]="{'background-image': 'url(' + (show.wallpaper) + ')'}"></div>
   <div class="main-content">
     <h2>{{show.title}}</h2>

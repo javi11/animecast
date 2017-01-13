@@ -3,6 +3,8 @@ import { Http } from '@angular/http';
 import { Scrapper } from './scrapper';
 import { ApiMapping } from './api-mapping';
 import { Show } from '../pages/show/show';
+import { ProvidersHelpers } from './helpers';
+import _ from 'lodash';
 
 /*
   Generated class for the Catalog provider.
@@ -13,12 +15,12 @@ import { Show } from '../pages/show/show';
 @Injectable()
 export class Catalog {
 
-  constructor(public http: Http) {}
+  constructor(public http: Http, public helpers:ProvidersHelpers) {}
 
   find(host: string, page: number): Promise<Array<Show>> {
     let scrapper;
     let isHtml:boolean = false;
-      return this.getPlugin(host)
+      return this.helpers.getPlugin(host)
         .then(plugin => {
           if(plugin.catalog.scrapper) {
             scrapper = new Scrapper();
@@ -38,13 +40,13 @@ export class Catalog {
           result = isHtml? scrapper.startScrappe(data['_body']) : scrapper.startMapping(data.json());
           return result;
         })
-        .catch(this.handleError);
+        .catch(_.curry(this.helpers.handleError)('Can\'t get the catalog'));
   }
 
   findById(host: string, url: string): Promise<Show> {
     let scrapper;
     let isHtml:boolean = false;
-      return this.getPlugin(host)
+      return this.helpers.getPlugin(host)
         .then(plugin => {
           if(plugin.show.scrapper) {
             scrapper = new Scrapper();
@@ -60,22 +62,11 @@ export class Catalog {
         })
         .then(data => {
           const show = isHtml? scrapper.startScrappe(data['_body']) : scrapper.startMapping(data.json());
-          return show && show[0] ? show[0] : this.handleError({
-            message: `${url} can't be scrapped`,
+          return show && show[0] ? show[0] : this.helpers.handleError('Can\'t get the catalog', {
+            developerMessage: `${url} can't be scrapped`,
             code: '500'
           });
-        });
-  }
-
-  getPlugin(host):Promise<any> {
-    return this.http
-      .get(`assets/plugins/${host}.json`)
-      .map(res => res.json())
-      .toPromise();
-  }
-
-  private handleError(error: any): Promise<any> {
-    console.error('An error occurred', error);
-    return Promise.reject(error.message || error);
+        })
+        .catch(_.curry(this.helpers.handleError)('Can\'t get the show'));
   }
 }

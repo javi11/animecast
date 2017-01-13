@@ -6,19 +6,19 @@
 <ion-content>
   <ion-list *ngFor="let episode of episodes; let i = index;">
     <ion-item-sliding>
-      <ion-item>
+      <button color="darklight" ion-item (click)="goToEpisode($event, episode)">
         <h2>Episode {{episodes.length - i}}</h2>
         <p>{{episode.title}}</p>
         <ion-icon name="arrow-dropright-circle" item-right></ion-icon>
-      </ion-item>
+      </button>
       <ion-item-options side="left">
-        <button ion-button color="primary">
+        <button ion-button color="brown-base">
                 <ion-icon name="cloud-download"></ion-icon>
                 Download
               </button>
       </ion-item-options>
       <ion-item-options side="right">
-        <button ion-button color="primary">
+        <button ion-button color="green-base">
                 <ion-icon name="eye"></ion-icon>
                 Mark
               </button>

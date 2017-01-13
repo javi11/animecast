@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Http} from '@angular/http';
 import { Scrapper } from './scrapper';
-import { Izanagi } from './servers/izanagi';
+import { ProvidersHelpers } from './helpers';
+import { ApiMapping } from './api-mapping';
+import _ from 'lodash';
 
 /*
   Generated class for the Episode provider.
@@ -12,74 +14,30 @@ import { Izanagi } from './servers/izanagi';
 @Injectable()
 export class Episode {
 
-  constructor(public http: Http) {}
+  constructor(public http: Http, public helpers:ProvidersHelpers) {}
 
   findById(host: string, url: string) : Promise <any> {
     let scrapper;
+    let isHtml:boolean = false;
 
-    return this.http
-      .get(`assets/plugins/${host}.json`)
-      .map(res => res.json())
-      .toPromise()
+    return this.helpers.getPlugin(host)
       .then(plugin => {
-        scrapper = new Scrapper();
-        scrapper.setPlugin(plugin.episode);
-
+          if(plugin.catalog.scrapper) {
+            scrapper = new Scrapper();
+            isHtml = true;
+          } else {
+            scrapper =new ApiMapping();
+          }
+          scrapper.setPlugin(plugin.catalog);
         return this.http
-          .get(url)
+          .get(`${plugin.url}${url}`)
           .toPromise();
       })
-      .then(html => {
-            let episode:any = scrapper.startScrappe(html['_body']);
-            if(episode) {
-              episode = episode[0];
-              /* Especial modifications especific for every plugin */
-              if(scrapper.getPlugin().modifications.length > 0) {
-                scrapper.getPlugin().episode.modifications.forEach(modification => {
-                  episode[modification.from] = this.modificationList(modification, episode[modification.from]);
-                });
-              }
-              return this.addStreamLink(episode);
-            }
+      .then(data => {
+          let result = [];
+          result = isHtml? scrapper.startScrappe(data['_body']) : scrapper.startMapping(data.json());
+          return result;
       })
-      .catch(this.handleError);
+      .catch(_.curry(this.helpers.handleError)('Can\'t get the episode'));
   }
-
-  addStreamLink(episode: any) {
-      let result = Promise.resolve(episode);
-
-      switch (true) {
-        case (episode.streamLink.indexOf('izanagi') > -1):
-          let izanagi = new Izanagi(this.http);
-          result = izanagi.setStreamLink(episode);
-          break;
-      }
-
-      return result;
-  }
-
-  modificationList(modification: any, value: string) {
-    let result:any = value;
-    switch(modification.action) {
-      case 'remove':
-        result = value.replace(modification.what,'');
-      break;
-      case 'replace':
-        result = value.replace(modification.what, modification.for);
-      break;
-      case 'urlDecode':
-        result = decodeURIComponent(value);
-      break;
-      case 'prepend':
-        result = `${modification.what}${value}`;
-      break;
-    }
-    return result;
-  }
-
-  private handleError(error: any): Promise<any> {
-    console.error('An error occurred', error);
-    return Promise.reject(error.message || error);
-  }
-
 }

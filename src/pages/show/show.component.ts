@@ -61,7 +61,7 @@ export class ShowDetails {
 
    createLoader() {
     return this.loadingCtrl.create({
-      content: 'Loading data...'
+      content: 'Loading show...'
     });
   }
 }
