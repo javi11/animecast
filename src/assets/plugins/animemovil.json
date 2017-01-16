@@ -42,22 +42,23 @@
     }
   },
   "episode": {
-    "startTag": ".epi_cont",
-    "modifications": [{
-        "from": "streamLink",
-        "what": "https://s2.animeflv.com/izanagi.php?id=",
-        "action": "prepend"
-      },
-      {
-        "from": "streamLink",
-        "what": "\\",
-        "for": "",
-        "action": "replace"
-      }
-    ],
+    "startTag": "article",
     "scrapper": {
-      "streamLink": "regex:embed_izanagi.php\\?key=(.*?)\"",
-      "uploadDate": "#detalle_fecha@html"
+      "name": "h1.h1@html",
+      "description": "",
+      "options": {
+        "startTag": "ul.controles",
+        "scrapper": {
+          "streamLink": "",
+          "serverTitle": "Automatic",
+          "optionsJson": "regex:cap_json=(.*?);"
+        },
+        "transform": {
+          "streamLink": "<%= 'http://server-3-stream.animemovil.net/?carpeta=' + JSON.parse(optionsJson).carpeta + '&archivo=' + JSON.parse(optionsJson).archivo + '&id=' + JSON.parse(optionsJson).id + '&json=false' %>",
+          "thumb": "<%= '//img.animemovil.com/w440-h250-c/' + JSON.parse(optionsJson).imagen %>",
+          "optionsJson": null
+        }
+      }
     }
   }
 }

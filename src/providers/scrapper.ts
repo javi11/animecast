@@ -28,7 +28,7 @@ export class Scrapper {
     return this.plugin;
   }
 
-  private scrappe(html: any, find: any):Array<any> {
+  private scrappe(html: any, find: any, allHtml:any = html):Array<any> {
     if(!html) {
       console.error('html is empty on', find);
       return [];
@@ -49,11 +49,11 @@ export class Scrapper {
       let element = <any>{};
       Object.keys(find).forEach((key) => {
         if (typeof find[key] === 'object') {
-          element[key] = this.scrappe(item, find[key]);
+          element[key] = this.scrappe(item, find[key], allHtml);
         } else {
           if(this.isRegex(find[key])) {
               var regex = new RegExp(find[key].split('regex:')[1]);
-              var matches = regex.exec(html);
+              var matches = regex.exec(allHtml);
               element[key] = matches.length > 0 && matches[1];
           } else {
             let [findTag, extract] = find[key].split('@');

@@ -12,6 +12,13 @@ import { Scrapper } from '../providers/scrapper';
 import { ProvidersHelpers } from '../providers/helpers';
 import './rxjs-extensions';
 
+//Video Player
+import {VgCoreModule} from 'videogular2/core';
+import {VgControlsModule} from 'videogular2/controls';
+import {VgOverlayPlayModule} from 'videogular2/overlay-play';
+import {VgBufferingModule} from 'videogular2/buffering';
+import {PlayerComponent} from '../components/player/player';
+
 @NgModule({
   declarations: [
     MyApp,
@@ -21,14 +28,19 @@ import './rxjs-extensions';
     Details,
     Episodes,
     ElasticHeader,
-    Gallery
+    Gallery,
+    PlayerComponent
   ],
   providers: [
     Scrapper,
     ProvidersHelpers
   ],
   imports: [
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    VgCoreModule,
+    VgControlsModule,
+    VgOverlayPlayModule,
+    VgBufferingModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [

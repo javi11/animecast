@@ -16,13 +16,14 @@ import { Episode } from '../../providers/Episode';
   ]
 })
 export class EpisodeDetails {
-  episode: any = {};
+  episode:any = {};
+  options:any = [];
   loading:Loading;
   error: any;
 
   constructor(public navCtrl: NavController,
    public navParams: NavParams, 
-   public episodeService:Episode,
+   public episodeService:Episode, 
    public loadingCtrl: LoadingController) {}
 
   ngOnInit() {
@@ -33,6 +34,7 @@ export class EpisodeDetails {
       .findById('animemovil', this.navParams.get('episodeLink'))
       .then(episode => {
         this.episode = episode;
+        this.options = this.episode.options;
         this.loading.dismiss();
       })
       .catch(error =>{

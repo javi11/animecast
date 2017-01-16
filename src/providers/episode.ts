@@ -22,21 +22,23 @@ export class Episode {
 
     return this.helpers.getPlugin(host)
       .then(plugin => {
-          if(plugin.catalog.scrapper) {
+          if(plugin.episode.scrapper) {
             scrapper = new Scrapper();
             isHtml = true;
           } else {
             scrapper =new ApiMapping();
           }
-          scrapper.setPlugin(plugin.catalog);
+          scrapper.setPlugin(plugin.episode);
         return this.http
           .get(`${plugin.url}${url}`)
           .toPromise();
       })
       .then(data => {
-          let result = [];
-          result = isHtml? scrapper.startScrappe(data['_body']) : scrapper.startMapping(data.json());
-          return result;
+          let result = isHtml? scrapper.startScrappe(data['_body']) : scrapper.startMapping(data.json());
+          return result && result[0] ? result[0] : this.helpers.handleError('Can\'t get the episode', {
+            developerMessage: `${url} can't be scrapped`,
+            code: '500'
+          });
       })
       .catch(_.curry(this.helpers.handleError)('Can\'t get the episode'));
   }
