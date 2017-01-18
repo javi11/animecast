@@ -1,8 +1,3 @@
-<ion-header>
-  <ion-navbar>
-    <ion-title>{{episode.name}}</ion-title>
-  </ion-navbar>
-</ion-header>
-<ion-content padding>
-  <player [options]="options"></player>
+<ion-content>
+  <player [options]="options" [goBackAction]="goBackCallback"></player>
 </ion-content>

@@ -12,6 +12,8 @@ import { Component, Input, OnChanges, SimpleChange } from '@angular/core';
 })
 export class PlayerComponent implements OnChanges {
   @Input() options: Array<any> = [];
+  @Input() public goBackAction: Function; 
+  
   sources:any = []
 
   constructor() {}

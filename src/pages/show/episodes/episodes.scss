@@ -1,0 +1,17 @@
+.episode_list {
+  h2 {
+    font-size: 1.5rem;
+  }
+  ion-icon {
+    font-size: 1.8em;
+  }
+  .card {
+    margin: 0px;
+    border-bottom: 3px lighten($gray-dark, 5%) solid;
+    width: 100%;
+    p {
+      padding-left: 14px;
+      color: $gray-lighter;
+    }
+  }
+}

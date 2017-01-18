@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, Loading,LoadingController } from 'ionic-angular';
+import { NavController, NavParams, Loading,LoadingController, AlertController } from 'ionic-angular';
 import { Episode } from '../../providers/Episode';
 
 /*
@@ -20,15 +20,18 @@ export class EpisodeDetails {
   options:any = [];
   loading:Loading;
   error: any;
+  public goBackCallback: Function;
 
   constructor(public navCtrl: NavController,
    public navParams: NavParams, 
    public episodeService:Episode, 
-   public loadingCtrl: LoadingController) {}
+   public loadingCtrl: LoadingController,
+   public alertCtrl: AlertController) {}
 
   ngOnInit() {
-    this.loading = this.createLoader();
+    this.goBackCallback = this.goBack.bind(this);
 
+    this.loading = this.createLoader();
     this.loading.present();
     this.episodeService
       .findById('animemovil', this.navParams.get('episodeLink'))
@@ -47,5 +50,23 @@ export class EpisodeDetails {
     return this.loadingCtrl.create({
       content: 'Loading episode...'
     });
+  }
+
+  goBack() {
+    let confirm = this.alertCtrl.create({
+      title: 'Caution!',
+      message: 'Are you sure you want to stop the video?',
+      buttons: [
+        {
+          text: 'No',
+          handler: () => {}
+        },
+        {
+          text: 'Yes',
+          handler: () => this.navCtrl.pop()
+        }
+      ]
+    });
+    confirm.present();
   }
 }

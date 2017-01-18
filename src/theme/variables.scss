@@ -19,25 +19,53 @@ $brown-base: #B59A7A !default;
 // http://ionicframework.com/docs/v2/theming/overriding-ionic-variables/
 $text-color: #000;
 $background-color: $gray-darker !default;
+
+/* Card variables */
+
+// Material
 $card-md-background-color: lighten($gray-darker, 5%) !default;
 $card-md-text-color: $base-color !default;
 $card-md-title-text-color: $base-color !default;
 $card-md-text-color: $base-color !default;
-$item-wp-paragraph-text-color: $base-color !default;
+$card-md-header-color: lighten($gray-darker, 5%) !default;
+
+/* Item variables */
+
+// Material
+$item-md-paragraph-text-color: $base-color !default;
+$item-md-divider-background: lighten($gray-darker, 5%) !default;
+// IOS
+$item-ios-paragraph-text-color: $base-color !default;
+$item-ios-divider-color: lighten($gray-darker, 5%) !default;
+
+/* Toolbar variables */
+
 $toolbar-background: lighten($gray-darker, 10%) !default;
+
+/* Tabs variables */
+
+// Material
 $tabs-md-background: lighten($gray-darker, 10%) !default;
 $tabs-md-tab-text-color: $white-dark;
 $tabs-md-tab-text-color-active: $green-base;
 $tabs-md-tab-icon-color: $white-dark;
 $tabs-md-tab-icon-color-active: $green-base;
-$card-md-header-color: lighten($gray-darker, 5%) !default;
-$item-md-divider-background: lighten($gray-darker, 5%) !default;
+// IOS
+$tabs-ios-background: lighten($gray-darker, 10%) !default;
+$tabs-ios-tab-text-color: $white-dark;
+$tabs-ios-tab-text-color-active: $green-base;
+$tabs-ios-tab-icon-color: $white-dark;
+$tabs-ios-tab-icon-color-active: $green-base;
+
+/* List variables */
+
 $list-background-color: lighten($gray-darker, 5%) !default;
-$item-ios-paragraph-text-color: $base-color !default;
-$item-md-paragraph-text-color: $base-color !default;
-$item-ios-divider-color: lighten($gray-darker, 5%) !default;
+// Material
 $list-md-text-color: $white-dark;
 $list-md-border-color: lighten($gray-darker, 5%) !default;
+// IOS
+$list-ios-text-color: $white-dark;
+$list-ios-border-color: lighten($gray-darker, 5%) !default;
 // Named Color Variables
 // --------------------------------------------------
 // Named colors makes it easy to reuse colors on various components.

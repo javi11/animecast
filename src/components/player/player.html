@@ -1,4 +1,7 @@
 <vg-player>
+  <div class="backPlayer" (click)="goBackAction($event)">
+    <ion-icon name="arrow-back"></ion-icon>
+  </div>
   <vg-overlay-play></vg-overlay-play>
   <vg-buffering></vg-buffering>
 
@@ -7,7 +10,7 @@
     <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
   </vg-scrub-bar>
 
-  <vg-controls>
+  <vg-controls vgAutohide="true">
     <vg-play-pause></vg-play-pause>
 
     <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
