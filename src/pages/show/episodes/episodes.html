@@ -15,7 +15,7 @@
       </button>
         <h2 (click)="toggleDetails(episode)">{{episodes.length - i}} {{episode.title}}</h2>
       </ion-item>
-      <ion-card-content [hidden]="!episode.showDetails || episode.showDetails === 'collapsed'">
+      <ion-card-content>
         <p>Wait a minute. Wait a minute, Doc. Uhhh... Are you telling me that you built a time machine... out of a DeLorean?! Whoa. This is heavy.</p>
       </ion-card-content>
     </ion-card>

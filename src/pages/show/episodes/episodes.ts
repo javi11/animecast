@@ -8,14 +8,14 @@ import { ShowService } from '../show.service';
  templateUrl: 'episodes.html',
  animations: [
         trigger('openClose', [
-            state('collapsed, void',
+            state('collapsed, void, *',
                 style({ height: '48px', })),
             state('expanded',
-                style({ 'height': "*" })),
+                style({ 'height': "150px" })),
             transition(
-            'collapsed => expanded', [animate('500ms ease-in', style({'height': '150px'})), animate('500ms ease-in')]),
+            '* => expanded', [animate('500ms ease-in', style({'height': '150px'}))]),
            transition(
-            'expanded => collapsed', [animate('500ms ease-out', style({'height': '48px'})), animate('500ms ease-out')])
+            'expanded => collapsed', [animate('500ms ease-out', style({'height': '48px'}))])
         ])
     ]
 })
@@ -29,10 +29,7 @@ export class Episodes {
 
   public ngOnInit():void {
     // if the show is updated update the episodes to.
-    this.subscription = this.showService.show$.subscribe(show => show & (this.episodes = show.episodes.map(episode=>{
-      episode.showDetails = 'collapsed';
-      return episode;
-    })));
+    this.subscription = this.showService.show$.subscribe(show => show & (this.episodes = show.episodes));
   }
 
   goToEpisode(event, episode):void {
@@ -45,7 +42,7 @@ export class Episodes {
   }
 
   toggleDetails(data) {
-    if (data.showDetails) {
+    if (!data.showDetails || data.showDetails === 'collapsed') {
         data.showDetails = 'expanded';
     } else {
         data.showDetails = 'collapsed';
