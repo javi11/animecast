@@ -6,7 +6,7 @@ import { Show } from '../show';
 @Component({
  templateUrl: 'details.html'
 })
-export class Details{
+export class DetailsComponent {
   @Input() show:Show = {};
   subscription: Subscription;
 

@@ -3,8 +3,9 @@ import { Catalog } from '../../providers/Catalog';
 import { NavParams, LoadingController, Loading, ToastController, Toast } from 'ionic-angular';
 import { Show } from './show';
 import { ShowService } from './show.service';
-import { Details } from './details/details';
-import { Episodes } from './episodes/episodes';
+import { EpisodeService } from './episodes/episodes.service';
+import { DetailsComponent } from './details/details.component';
+import { EpisodesComponent } from './episodes/episodes.component';
 //import { Reviews } from './reviews';
 
 @Component({
@@ -22,25 +23,27 @@ import { Episodes } from './episodes/episodes';
       <ion-tab tabIcon="desktop" tabTitle="Episodes" [root]="tab2" [rootParams]="show"></ion-tab>
     </ion-tabs>`,
   providers: [
-    Details,
-    Episodes,
+    DetailsComponent,
+    EpisodesComponent,
     Catalog,
-    ShowService
+    ShowService,
+    EpisodeService
   ]
 })
 export class ShowDetails {
   show: Show = {};
   loading:Loading;
   error:Toast;
-  tab1: any = Details;
-  tab2: any = Episodes;
+  tab1: any = DetailsComponent;
+  tab2: any = EpisodesComponent;
   //tab3: any = Reviews;
 
   constructor(public navParams: NavParams,
    public loadingCtrl: LoadingController,
    public catalogService: Catalog,
    public showService:ShowService,
-   private details:Details, 
+   public episodeService:EpisodeService,
+   private details:DetailsComponent, 
    public toastCtrl: ToastController) {}
 
   ngOnInit() {
@@ -54,11 +57,29 @@ export class ShowDetails {
     this.loading.present();
     return this.catalogService
       .findById('animemovil', this.navParams.get('showLink'))
+      .then(this.populateEpisodeData.bind(this))
       .then(show => {
-        this.showService.showLoaded(show);
         this.show = show;
+        this.show.link = this.navParams.get('showLink');
+        this.showService.showLoaded(this.show);
         this.loading.dismiss();
       });
+  }
+
+  populateEpisodeData(show): Promise<Show>{
+    return new Promise((resolve, reject) => {
+      if(show.episodes && show.episodes.length > 0) {
+        return this.episodeService.getEpisodes(this.navParams.get('showLink')).then(episodes => {
+          episodes && episodes.length > 0 && episodes.forEach(episode => {
+            const episodeIndex = show.episodes.findIndex(item => item.link === episode.id);
+            Object.assign(show.episodes[episodeIndex], episode);
+          });
+          resolve(show);
+        });
+      } else {
+        return resolve(show);
+      }
+    });
   }
 
   createLoader() {

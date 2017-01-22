@@ -5,7 +5,7 @@
 
 <ion-content class="episode_list">
   <ion-list>
-    <ion-card *ngFor="let episode of episodes; let i = index;" [@openClose]="episode.showDetails">
+    <ion-card *ngFor="let episode of show.episodes; let i = index;" [@openClose]="episode.showDetails">
       <ion-item>
         <button color="darklight" ion-button item-right>
           <ion-icon name="cloud-download"></ion-icon>
@@ -13,8 +13,11 @@
         <button color="darklight" ion-button item-right (click)="goToEpisode($event, episode)">
         <ion-icon name="play"></ion-icon>
       </button>
-        <h2 (click)="toggleDetails(episode)">{{episodes.length - i}} {{episode.title}}</h2>
+        <h2 (click)="toggleDetails(episode)">{{show.episodes.length - i}} {{episode.title}}</h2>
       </ion-item>
+      <div *ngIf="episode.duration" class="progress-container">
+        <div class="progressbar red" [ngStyle]="getEpisodePercentage(episode)"></div>
+      </div>
       <ion-card-content>
         <p>Wait a minute. Wait a minute, Doc. Uhhh... Are you telling me that you built a time machine... out of a DeLorean?! Whoa. This is heavy.</p>
       </ion-card-content>

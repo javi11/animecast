@@ -16,7 +16,7 @@ export class Episode {
 
   constructor(public http: Http, public helpers:ProvidersHelpers) {}
 
-  findById(host: string, url: string) : Promise <any> {
+  findById(host: string, url: string): Promise <any> {
     let scrapper;
     let isHtml:boolean = false;
 

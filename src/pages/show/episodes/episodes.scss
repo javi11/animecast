@@ -13,5 +13,18 @@
       padding-left: 14px;
       color: $gray-lighter;
     }
+    .progress-container {
+      position: relative;
+      background-color: $gray-lighter;
+      width: 70%;
+      height: 2px;
+      left: 20px;
+    }
+    .progressbar {
+      background-color: $red;
+      height: 100%;
+      position: absolute;
+      line-height: inherit;
+    }
   }
 }
