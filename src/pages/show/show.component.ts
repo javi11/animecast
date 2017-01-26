@@ -6,6 +6,7 @@ import { ShowService } from './show.service';
 import { EpisodeService } from './episodes/episodes.service';
 import { DetailsComponent } from './details/details.component';
 import { EpisodesComponent } from './episodes/episodes.component';
+import { ConfigProvider } from '../../config/config.provider';
 //import { Reviews } from './reviews';
 
 @Component({
@@ -44,7 +45,8 @@ export class ShowDetails {
    public showService:ShowService,
    public episodeService:EpisodeService,
    private details:DetailsComponent, 
-   public toastCtrl: ToastController) {}
+   public toastCtrl: ToastController,
+    public config:ConfigProvider) {}
 
   ngOnInit() {
     this.getShow()
@@ -55,15 +57,15 @@ export class ShowDetails {
     this.loading = this.createLoader();
 
     this.loading.present();
-    return this.catalogService
-      .findById('animemovil', this.navParams.get('showLink'))
+    return this.config.get().then(config => this.catalogService
+      .findById(config.provider, this.navParams.get('showLink'))
       .then(this.populateEpisodeData.bind(this))
       .then(show => {
         this.show = show;
         this.show.link = this.navParams.get('showLink');
         this.showService.showLoaded(this.show);
         this.loading.dismiss();
-      });
+    }));
   }
 
   populateEpisodeData(show): Promise<Show>{

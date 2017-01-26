@@ -9,11 +9,11 @@ import { ShowService } from '../show.service';
  animations: [
   trigger('openClose', [
     state('collapsed, void, *',
-      style({ height: '50px' })),
+      style({ height: '54px' })),
     state('expanded',
       style({ 'height': "150px" })),
     transition('* => expanded', [animate('500ms ease-in', style({'height': '150px'}))]),
-    transition('expanded => collapsed', [animate('500ms ease-out', style({'height': '50px'}))])
+    transition('expanded => collapsed', [animate('500ms ease-out', style({'height': '54px'}))])
   ])
  ]
 })
@@ -43,7 +43,7 @@ export class EpisodesComponent {
 
   goToEpisode(event, episode):void {
     this.app.getRootNav().push(PlayerComponent, {
-      episodeLink: episode.link,
+      episode,
       showLink: this.show.link
     },{
       animate: true,

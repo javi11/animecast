@@ -3,6 +3,7 @@ import { NavController, LoadingController, Loading, ToastController, Toast } fro
 import { Catalog } from '../../providers/Catalog';
 import { Scrapper } from '../../providers/scrapper';
 import { ShowDetails } from '../show/show.component';
+import { ConfigProvider } from '../../config/config.provider';
 
 @Component({
   selector: 'page-home',
@@ -22,10 +23,14 @@ export class Home {
   constructor(public navCtrl: NavController, 
     public catalogService: Catalog, 
     public loadingCtrl: LoadingController, 
-    public toastCtrl: ToastController) {}
+    public toastCtrl: ToastController,
+    public config:ConfigProvider) {}
 
   public ngOnInit():void {
+    this.loading = this.createLoader();
+    this.loading.present();
     this.getCatalog()
+      .then(() => this.loading.dismiss())
       .catch(this.handleError.bind(this));
     this.goToShowCallback = this.goToShow.bind(this);
   }
@@ -40,17 +45,13 @@ export class Home {
   }
 
   getCatalog():Promise<any> {
-    this.loading = this.createLoader();
-
-    this.loading.present();
-    return this.catalogService
-      .find('animemovil', this.page)
+    return this.config.get().then(config => this.catalogService
+      .find(config.provider, this.page)
       .then(newItems => {
         this.page++;
-        this.loading.dismiss();
         this.newItems = newItems;
         return Promise.resolve();
-      })
+    }));
   }
 
   goToShow(event, show):void  {

@@ -10,6 +10,7 @@ import { ElasticHeader } from '../components/elastic-header/elastic-header';
 import { Gallery } from '../components/gallery/gallery';
 import { Scrapper } from '../providers/scrapper';
 import { ProvidersHelpers } from '../providers/helpers';
+import { ConfigProvider } from '../config/config.provider';
 import './rxjs-extensions';
 
 //Video Player
@@ -35,6 +36,7 @@ export function provideStorage() {
     PlayerComponent
   ],
   providers: [
+    ConfigProvider,
     Scrapper,
     ProvidersHelpers,
     { 

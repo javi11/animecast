@@ -28,7 +28,7 @@
       <vg-fullscreen></vg-fullscreen>
     </vg-controls>
 
-    <video vgMedia #media id="singleVideo" preload="false" class="videoPlayer">
+    <video vgMedia #media id="singleVideo" preload="auto" class="videoPlayer" autoplay>
           <source *ngFor="let video of sources" [src]="video.src" [type]="video.type">
       </video>
   </vg-player>

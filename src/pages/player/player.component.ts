@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, Loading,LoadingController, AlertController } from 'ionic-angular';
+import { NavController, NavParams, Loading,LoadingController, AlertController, Platform } from 'ionic-angular';
 import { Episode } from '../../providers/Episode';
 import { EpisodeService } from '../../pages/show/episodes/episodes.service';
 import {VgAPI} from 'videogular2/core';
+import { ScreenOrientation,  } from 'ionic-native';
+import { ConfigProvider } from '../../config/config.provider';
+
 /*
   Generated class for the Player component.
 
@@ -23,29 +26,38 @@ export class PlayerComponent {
   loading:Loading;
   error: any;
   videoAngular2Api:VgAPI;
-  sources:any = []
+  sources:any = [];
+  updating:boolean = false;
 
   constructor(public navCtrl: NavController,
    public navParams: NavParams, 
    public episodeProvider:Episode, 
    public loadingCtrl: LoadingController,
    public alertCtrl: AlertController,
-   public episodeService:EpisodeService ) {}
+   public episodeService:EpisodeService,
+   public platform:Platform,
+   public config:ConfigProvider) {}
 
    ngOnInit() {
+    this.platform.ready().then(() => !this.platform.is('core') && ScreenOrientation.lockOrientation('landscape'));
+
     this.loading = this.createLoader();
     this.loading.present();
-    this.episodeProvider
-      .findById('animemovil', this.navParams.get('episodeLink'))
+    this.config.get().then(config => this.episodeProvider
+      .findById(config.provider, this.navParams.get('episode').link)
       .then(episode => {
-        this.episode = episode;
+        this.episode = Object.assign(episode, this.navParams.get('episode'));
         this.selectDefaultOption(episode);  
         this.loading.dismiss();
       })
       .catch(error =>{
         this.error = error; 
         this.loading.dismiss();
-      });
+    }));
+  }
+
+  ngOnDestroy() {
+    this.platform.ready().then(() => !this.platform.is('core') && ScreenOrientation.lockOrientation('portrait'));
   }
 
   selectDefaultOption(episode:any) {
@@ -64,8 +76,31 @@ export class PlayerComponent {
     });
   }
 
+  seekVideo():void {
+    // Set the video to the beginning
+      var video = this.videoAngular2Api.videogularElement;
+      if (video.requestFullscreen) {
+        video.requestFullscreen();
+      } else if (video.msRequestFullscreen) {
+        video.msRequestFullscreen();
+      } else if (video.mozRequestFullScreen) {
+        video.mozRequestFullScreen();
+      } else if (video.webkitRequestFullscreen) {
+        video.webkitRequestFullscreen();
+      }
+    this.videoAngular2Api.getDefaultMedia().currentTime = this.episode.currentTime || 0;
+  }
+
+  onPause():void {
+    const mediaData = this.getMediaData();
+    this.updating = true;
+    this.episodeService.updateEpisodeStatus(this.navParams.get('showLink'), mediaData).then(() => this.updating = false);
+  }
+
   onPlayerReady(api:VgAPI) {
     this.videoAngular2Api = api;
+    this.videoAngular2Api.getDefaultMedia().subscriptions.loadStart.subscribe(this.seekVideo.bind(this));
+    this.videoAngular2Api.getDefaultMedia().subscriptions.pause.subscribe(this.onPause.bind(this));
   }
 
   goBack() {
@@ -80,10 +115,8 @@ export class PlayerComponent {
         {
           text: 'Yes',
           handler: () => {
-            const mediaData = this.getMediaData();
-            this.episodeService.updateEpisodeStatus(this.navParams.get('showLink'), mediaData).then(() => {
-              this.navCtrl.pop();
-            });
+            this.videoAngular2Api && this.videoAngular2Api.pause();
+            this.navCtrl.pop();
           }
         }
       ]
@@ -94,11 +127,11 @@ export class PlayerComponent {
   private getMediaData():any {
     let mediaData = {};
     if(this.videoAngular2Api) {
-      const time = this.videoAngular2Api.time;
+      const time = this.videoAngular2Api.getDefaultMedia();
       mediaData = {
-        currentTime: time.current,
-        duration: time.total,
-        id: this.navParams.get('episodeLink')
+        currentTime: time.currentTime,
+        duration: time.duration,
+        id: this.episode.link
       };
     }
     return mediaData;
