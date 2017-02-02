@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, trigger, state, style, transition, animate } from '@angular/core';
 import { NavController, NavParams, Loading,LoadingController, AlertController, Platform } from 'ionic-angular';
 import { Episode } from '../../providers/Episode';
 import { EpisodeService } from '../../pages/show/episodes/episodes.service';
@@ -18,6 +18,21 @@ import { ConfigProvider } from '../../config/config.provider';
   providers: [
     Episode,
     EpisodeService
+  ],
+  animations: [
+    trigger('visibility', [
+        state('shown', style({
+            display:'flex',
+            opacity: 1,
+            cursor: 'auto'
+        })),
+        state('hidden', style({
+            display:'none',
+            opacity: 0,
+            cursor: 'none'
+        })),
+        transition('* => *', animate('.5s'))
+    ])
   ]
 })
 export class PlayerComponent {
@@ -28,6 +43,13 @@ export class PlayerComponent {
   videoAngular2Api:VgAPI;
   sources:any = [];
   updating:boolean = false;
+
+  // Player controls
+  controlsVisible:string= 'shown';
+  hideTimeout:number = 3000;
+  inactivityTimeout:any;
+  autoHide:boolean = true;
+  aspectRatio = 'contain';
 
   constructor(public navCtrl: NavController,
    public navParams: NavParams, 
@@ -60,6 +82,18 @@ export class PlayerComponent {
     this.platform.ready().then(() => !this.platform.is('core') && ScreenOrientation.lockOrientation('portrait'));
   }
 
+  showControls() {
+    this.controlsVisible = 'shown';
+    this.autoHide && this.hideControls();
+  }
+
+  hideControls():void {
+    this.inactivityTimeout && clearTimeout(this.inactivityTimeout);
+    this.inactivityTimeout = setTimeout(() => {
+      this.controlsVisible = 'hidden';
+    }, this.hideTimeout);
+  }
+
   selectDefaultOption(episode:any) {
     const options = episode.options;
     options && options.length > 0 && (this.sources = [{
@@ -76,31 +110,30 @@ export class PlayerComponent {
     });
   }
 
+  changueAspectRatio(aspectRatio):void {
+    this.aspectRatio = aspectRatio;
+  }
+
   seekVideo():void {
-    // Set the video to the beginning
-      var video = this.videoAngular2Api.videogularElement;
-      if (video.requestFullscreen) {
-        video.requestFullscreen();
-      } else if (video.msRequestFullscreen) {
-        video.msRequestFullscreen();
-      } else if (video.mozRequestFullScreen) {
-        video.mozRequestFullScreen();
-      } else if (video.webkitRequestFullscreen) {
-        video.webkitRequestFullscreen();
-      }
     this.videoAngular2Api.getDefaultMedia().currentTime = this.episode.currentTime || 0;
   }
 
   onPause():void {
-    const mediaData = this.getMediaData();
-    this.updating = true;
-    this.episodeService.updateEpisodeStatus(this.navParams.get('showLink'), mediaData).then(() => this.updating = false);
+    // keep visible the controls
+    this.inactivityTimeout && clearTimeout(this.inactivityTimeout);
+    this.controlsVisible = 'shown';
+    if(this.updating){
+      const mediaData = this.getMediaData();
+      this.updating = true;
+      this.episodeService.updateEpisodeStatus(this.navParams.get('showLink'), mediaData).then(() => this.updating = false);
+    }
   }
 
   onPlayerReady(api:VgAPI) {
     this.videoAngular2Api = api;
     this.videoAngular2Api.getDefaultMedia().subscriptions.loadStart.subscribe(this.seekVideo.bind(this));
     this.videoAngular2Api.getDefaultMedia().subscriptions.pause.subscribe(this.onPause.bind(this));
+    this.autoHide && this.videoAngular2Api.getDefaultMedia().subscriptions.play.subscribe(this.hideControls.bind(this));
   }
 
   goBack() {

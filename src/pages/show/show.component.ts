@@ -55,7 +55,7 @@ export class ShowDetails {
 
   getShow():Promise<any> {
     this.loading = this.createLoader();
-
+    
     this.loading.present();
     return this.config.get().then(config => this.catalogService
       .findById(config.provider, this.navParams.get('showLink'))
@@ -74,7 +74,7 @@ export class ShowDetails {
         return this.episodeService.getEpisodes(this.navParams.get('showLink')).then(episodes => {
           episodes && episodes.length > 0 && episodes.forEach(episode => {
             const episodeIndex = show.episodes.findIndex(item => item.link === episode.id);
-            Object.assign(show.episodes[episodeIndex], episode);
+            episodeIndex > -1 && Object.assign(show.episodes[episodeIndex], episode);
           });
           resolve(show);
         });

@@ -19,6 +19,9 @@ import {VgControlsModule} from 'videogular2/controls';
 import {VgOverlayPlayModule} from 'videogular2/overlay-play';
 import {VgBufferingModule} from 'videogular2/buffering';
 import {PlayerComponent} from '../pages/player/player.component';
+import { TrackSelector } from '../components/player/track-selector';
+import { OverlayPlay } from '../components/player/overlay-play';
+import { AspectRatioButton } from '../components/player/aspect-ratio-button';
 
 export function provideStorage() {
   return new Storage(['sqlite', 'websql', 'indexeddb'], { name: '__animecast' });
@@ -33,7 +36,10 @@ export function provideStorage() {
     EpisodesComponent,
     ElasticHeader,
     Gallery,
-    PlayerComponent
+    TrackSelector,
+    OverlayPlay,
+    PlayerComponent,
+    AspectRatioButton
   ],
   providers: [
     ConfigProvider,

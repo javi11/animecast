@@ -1,17 +1,26 @@
 <ion-content>
   <vg-player (onPlayerReady)="onPlayerReady($event)">
-    <div class="backPlayer" (click)="goBack($event)">
-      <ion-icon name="arrow-back"></ion-icon>
-    </div>
-    <vg-overlay-play></vg-overlay-play>
+    <vg-controls class="topControls" [@visibility]="controlsVisible" (click)="showControls($event)">
+      <div class="item buttom" (click)="goBack($event)">
+        <ion-icon name="arrow-back"></ion-icon>
+      </div>
+      <div class="item title">
+        <h5>{{episode.name}}</h5>
+      </div>
+      <vg-mute class="pull-right"></vg-mute>
+    </vg-controls>
+
     <vg-buffering></vg-buffering>
 
-    <vg-scrub-bar>
+    <overlay-play [aspectRatio]="aspectRatio" [@visibility]="controlsVisible" (click)="showControls($event)"></overlay-play>
+    <div class="show-controls" (click)="showControls($event)"></div>
+
+    <vg-scrub-bar [@visibility]="controlsVisible" (click)="showControls($event)">
       <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
       <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
     </vg-scrub-bar>
 
-    <vg-controls vgAutohide="true">
+    <vg-controls [@visibility]="controlsVisible" (click)="showControls($event)">
       <vg-play-pause></vg-play-pause>
 
       <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
@@ -21,15 +30,14 @@
       <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
       <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
 
-      <vg-track-selector></vg-track-selector>
-      <vg-mute></vg-mute>
-      <vg-volume></vg-volume>
-
-      <vg-fullscreen></vg-fullscreen>
+      <track-selector></track-selector>
+      <aspect-ratio-button (onSelectAspectRatio)="changueAspectRatio($event)"></aspect-ratio-button>
     </vg-controls>
 
-    <video vgMedia #media id="singleVideo" preload="auto" class="videoPlayer" autoplay>
-          <source *ngFor="let video of sources" [src]="video.src" [type]="video.type">
-      </video>
+    <video vgMedia #media id="singleVideo" preload="auto" class="videoPlayer" autoplay [ngStyle]="{'object-fit': aspectRatio}">
+      <source *ngFor="let video of sources" [src]="video.src" [type]="video.type">
+      <track label="EN" kind="subtitles" srclang="en" src="https://raw.githubusercontent.com/andreyvit/subtitle-tools/master/sample.srt" default>
+      <track label="ES" kind="subtitles" srclang="es" src="https://raw.githubusercontent.com/andreyvit/subtitle-tools/master/sample.srt">
+    </video>
   </vg-player>
 </ion-content>
