@@ -1,3 +1,3 @@
- export const DefaultConfig = Object.freeze({
-     provider: 'animemovil'
- });
+export const DefaultConfig = Object.freeze({
+    provider: 'ororo.tv'
+});

@@ -14,7 +14,7 @@ export class Scrapper {
 
   private plugin: any;
 
-  constructor() {}
+  constructor() { }
 
   public startScrappe(html: any) {
     return this.scrappe(html, this.plugin);
@@ -28,36 +28,45 @@ export class Scrapper {
     return this.plugin;
   }
 
-  private scrappe(html: any, find: any, allHtml:any = html):Array<any> {
-    if(!html) {
+  private scrappe(html: any, find: any, allHtml: any = html): Array<any> {
+    if (!html) {
       console.error('html is empty on', find);
       return [];
     }
 
-    const data:any = jquery(html);
-    const startHtml:any = data.find(find.startTag);
+    const data: any = jquery(html);
+    let startHtml: any;
     let result: Array<any> = [];
     const transform = find.transform;
+    const root = find.root;
+    if (root) {
+      startHtml = data;
+    } else {
+      startHtml = data.find(find.startTag);
+    }
 
-    find = find.scrapper;
-    if(!startHtml) {
+    if (!startHtml) {
       console.error(`${find.startTag} not found on the html`);
       return [];
     }
+
+    find = find.scrapper;
+
     startHtml.each((index, item) => {
-      let jqueryItem = jquery(item);
+      let jqueryItem = root ? data : jquery(item);
       let element = <any>{};
+
       Object.keys(find).forEach((key) => {
         if (typeof find[key] === 'object') {
           element[key] = this.scrappe(item, find[key], allHtml);
         } else {
-          if(this.isRegex(find[key])) {
-              var regex = new RegExp(find[key].split('regex:')[1]);
-              var matches = regex.exec(allHtml);
-              element[key] = matches.length > 0 && matches[1];
+          if (this.isRegex(find[key])) {
+            var regex = new RegExp(find[key].split('regex:')[1]);
+            var matches = regex.exec(allHtml);
+            element[key] = matches.length > 0 && matches[1];
           } else {
             let [findTag, extract] = find[key].split('@');
-            if(!extract) {
+            if (!extract) {
               console.error('No tag @ found on ', key);
               return [];
             }
@@ -68,16 +77,16 @@ export class Scrapper {
       });
       result.push(element);
     });
-    if(transform) {
-      Object.keys(transform).forEach(transformation =>{
+    if (transform) {
+      Object.keys(transform).forEach(transformation => {
         result.forEach((item, $index) => {
-            try {
-              let compiled = _.template(transform[transformation]);
-              item[transformation] = compiled(item);
-              result[$index] = item;
-            } catch(err) {
-              console.error('Error on transformation, ', transformation, err);
-            }
+          try {
+            let compiled = _.template(transform[transformation]);
+            item[transformation] = compiled(item);
+            result[$index] = item;
+          } catch (err) {
+            console.error('Error on transformation, ', transformation, err);
+          }
         });
       });
     }
@@ -85,12 +94,12 @@ export class Scrapper {
   }
 
   private getResource(item, extract) {
-    let value:any;
+    let value: any;
 
-    const extractAtributtes:Array<string> = extract.split('||');
-    for(let i:number = 0; i < extractAtributtes.length; i++) {
-      value = (extractAtributtes[i] === 'html')? item.html() : item.attr(extractAtributtes[i]);
-      if(value){
+    const extractAtributtes: Array<string> = extract.split('||');
+    for (let i: number = 0; i < extractAtributtes.length; i++) {
+      value = (extractAtributtes[i] === 'html') ? item.html() : item.attr(extractAtributtes[i]);
+      if (value) {
         break;
       }
     }

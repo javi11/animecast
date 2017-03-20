@@ -1,9 +1,9 @@
 import { Component, trigger, state, style, transition, animate } from '@angular/core';
-import { NavController, NavParams, Loading,LoadingController, AlertController, Platform } from 'ionic-angular';
+import { NavController, NavParams, Loading, LoadingController, AlertController, Platform } from 'ionic-angular';
 import { Episode } from '../../providers/Episode';
 import { EpisodeService } from '../../pages/show/episodes/episodes.service';
-import {VgAPI} from 'videogular2/core';
-import { ScreenOrientation,  } from 'ionic-native';
+import { VgAPI } from 'videogular2/core';
+import { ScreenOrientation, } from 'ionic-native';
 import { ConfigProvider } from '../../config/config.provider';
 
 /*
@@ -21,46 +21,46 @@ import { ConfigProvider } from '../../config/config.provider';
   ],
   animations: [
     trigger('visibility', [
-        state('shown', style({
-            display:'flex',
-            opacity: 1,
-            cursor: 'auto'
-        })),
-        state('hidden', style({
-            display:'none',
-            opacity: 0,
-            cursor: 'none'
-        })),
-        transition('* => *', animate('.5s'))
+      state('shown', style({
+        display: 'flex',
+        opacity: 1,
+        cursor: 'auto'
+      })),
+      state('hidden', style({
+        display: 'none',
+        opacity: 0,
+        cursor: 'none'
+      })),
+      transition('* => *', animate('.5s'))
     ])
   ]
 })
 export class PlayerComponent {
-  episode:any = {};
-  options:any = [];
-  loading:Loading;
+  episode: any = {};
+  options: any = [];
+  loading: Loading;
   error: any;
-  videoAngular2Api:VgAPI;
-  sources:any = [];
-  updating:boolean = false;
+  videoAngular2Api: VgAPI;
+  sources: any = [];
+  updating: boolean = false;
 
   // Player controls
-  controlsVisible:string= 'shown';
-  hideTimeout:number = 3000;
-  inactivityTimeout:any;
-  autoHide:boolean = true;
+  controlsVisible: string = 'shown';
+  hideTimeout: number = 3000;
+  inactivityTimeout: any;
+  autoHide: boolean = true;
   aspectRatio = 'contain';
 
   constructor(public navCtrl: NavController,
-   public navParams: NavParams, 
-   public episodeProvider:Episode, 
-   public loadingCtrl: LoadingController,
-   public alertCtrl: AlertController,
-   public episodeService:EpisodeService,
-   public platform:Platform,
-   public config:ConfigProvider) {}
+    public navParams: NavParams,
+    public episodeProvider: Episode,
+    public loadingCtrl: LoadingController,
+    public alertCtrl: AlertController,
+    public episodeService: EpisodeService,
+    public platform: Platform,
+    public config: ConfigProvider) { }
 
-   ngOnInit() {
+  ngOnInit() {
     this.platform.ready().then(() => !this.platform.is('core') && ScreenOrientation.lockOrientation('landscape'));
 
     this.loading = this.createLoader();
@@ -69,13 +69,14 @@ export class PlayerComponent {
       .findById(config.provider, this.navParams.get('episode').link)
       .then(episode => {
         this.episode = Object.assign(episode, this.navParams.get('episode'));
-        this.selectDefaultOption(episode);  
+        console.log('episode -->', this.episode);
+        this.selectDefaultOption(episode);
         this.loading.dismiss();
       })
-      .catch(error =>{
-        this.error = error; 
+      .catch(error => {
+        this.error = error;
         this.loading.dismiss();
-    }));
+      }));
   }
 
   ngOnDestroy() {
@@ -87,21 +88,30 @@ export class PlayerComponent {
     this.autoHide && this.hideControls();
   }
 
-  hideControls():void {
+  hideControls(): void {
     this.inactivityTimeout && clearTimeout(this.inactivityTimeout);
     this.inactivityTimeout = setTimeout(() => {
       this.controlsVisible = 'hidden';
     }, this.hideTimeout);
   }
 
-  selectDefaultOption(episode:any) {
+  selectDefaultOption(episode: any) {
     const options = episode.options;
-    options && options.length > 0 && (this.sources = [{
-      src: options[0].streamLink,
-      type: 'video/mp4',
-      thumb: options[0].thumb
-    }]);
-    console.log(this.sources);
+    if (options && options.length > 0) {
+      this.sources = options.map((option) => {
+        return {
+          src: option.streamLink,
+          type: option.type || 'video/mp4',
+          thumb: option.thumb
+        }
+      });
+    } else {
+      this.sources = [{
+        src: episode.streamLink,
+        type: 'video/mp4',
+        thumb: episode.thumb
+      }];
+    }
   }
 
   createLoader() {
@@ -110,26 +120,27 @@ export class PlayerComponent {
     });
   }
 
-  changueAspectRatio(aspectRatio):void {
+  changueAspectRatio(aspectRatio): void {
     this.aspectRatio = aspectRatio;
   }
 
-  seekVideo():void {
+  seekVideo(): void {
+    this.videoAngular2Api.isLive = false;
     this.videoAngular2Api.getDefaultMedia().currentTime = this.episode.currentTime || 0;
   }
 
-  onPause():void {
+  onPause(): void {
     // keep visible the controls
     this.inactivityTimeout && clearTimeout(this.inactivityTimeout);
     this.controlsVisible = 'shown';
-    if(this.updating){
+    if (this.updating) {
       const mediaData = this.getMediaData();
       this.updating = true;
       this.episodeService.updateEpisodeStatus(this.navParams.get('showLink'), mediaData).then(() => this.updating = false);
     }
   }
 
-  onPlayerReady(api:VgAPI) {
+  onPlayerReady(api: VgAPI) {
     this.videoAngular2Api = api;
     this.videoAngular2Api.getDefaultMedia().subscriptions.loadStart.subscribe(this.seekVideo.bind(this));
     this.videoAngular2Api.getDefaultMedia().subscriptions.pause.subscribe(this.onPause.bind(this));
@@ -143,7 +154,7 @@ export class PlayerComponent {
       buttons: [
         {
           text: 'No',
-          handler: () => {}
+          handler: () => { }
         },
         {
           text: 'Yes',
@@ -157,9 +168,9 @@ export class PlayerComponent {
     confirm.present();
   }
 
-  private getMediaData():any {
+  private getMediaData(): any {
     let mediaData = {};
-    if(this.videoAngular2Api) {
+    if (this.videoAngular2Api) {
       const time = this.videoAngular2Api.getDefaultMedia();
       mediaData = {
         currentTime: time.currentTime,
