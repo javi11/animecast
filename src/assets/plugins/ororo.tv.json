@@ -1,0 +1,47 @@
+{
+  "url": "https://ororo.tv",
+  "catalog": {
+    "url": "https://ororo.tv",
+    "startTag": ".show",
+    "scrapper": {
+      "title": ".name@html",
+      "description": ".desc p@html",
+      "image": ".show_block img@data-original||src",
+      "link": ".name@href"
+    }
+  },
+  "show": {
+    "startTag": ".show-content",
+    "transform": {
+      "air": "<%= air.replace(/<[^>]+>/ig,\"\") %>",
+      "genres": "<%= air.replace(/<[^>]+>/ig,\"\") %>",
+      "wallpaper": "<%= image %>"
+    },
+    "scrapper": {
+      "title": ".show-content__title@html",
+      "description": ".show-content__description@html",
+      "image": ".poster-image@src||data-cfsrc",
+      "status": "",
+      "air": "#year@html",
+      "categories": "#genres@html",
+      "episodes": {
+        "startTag": ".show-content__episode-row",
+        "scrapper": {
+          "title": ".show-content__episode-link@html",
+          "link": ".show-content__episode-link@data-href"
+        }
+      }
+    }
+  },
+  "episode": {
+    "root": true,
+    "scrapper": {
+      "name": "",
+      "description": "",
+      "streamLink": "source@src",
+      "type": "source@type",
+      "serverTitle": "Automatic",
+      "optionsJson": ""
+    }
+  }
+}
