@@ -4,8 +4,8 @@ import { NavParams, LoadingController, Loading, ToastController, Toast } from 'i
 import { Show } from './show';
 import { ShowService } from './show.service';
 import { EpisodeService } from '../episodes/episodes.service';
-import { DetailsComponent } from '../details/details.component';
-import { EpisodesComponent } from '../episodes/episodes.component';
+import { DetailsPage } from '../details/details.page';
+import { EpisodesPage } from '../episodes/episodes.page';
 import { ConfigProvider } from '../../config/config.provider';
 //import { Reviews } from './reviews';
 
@@ -24,19 +24,19 @@ import { ConfigProvider } from '../../config/config.provider';
       <ion-tab tabIcon="desktop" tabTitle="Episodes" [root]="tab2" [rootParams]="show"></ion-tab>
     </ion-tabs>`,
   providers: [
-    DetailsComponent,
-    EpisodesComponent,
+    DetailsPage,
+    EpisodesPage,
     Catalog,
     ShowService,
     EpisodeService
   ]
 })
-export class ShowDetails {
+export class ShowPage {
   show: Show = {};
   loading: Loading;
   error: Toast;
-  tab1: any = DetailsComponent;
-  tab2: any = EpisodesComponent;
+  tab1: any = DetailsPage;
+  tab2: any = EpisodesPage;
   //tab3: any = Reviews;
 
   constructor(public navParams: NavParams,
@@ -44,7 +44,7 @@ export class ShowDetails {
     public catalogService: Catalog,
     public showService: ShowService,
     public episodeService: EpisodeService,
-    private details: DetailsComponent,
+    private details: DetailsPage,
     public toastCtrl: ToastController,
     public config: ConfigProvider) { }
 

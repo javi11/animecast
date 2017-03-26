@@ -2,31 +2,31 @@ import { Component } from '@angular/core';
 import { NavController, LoadingController, Loading, ToastController, Toast } from 'ionic-angular';
 import { Catalog } from '../../providers/Catalog';
 import { Scrapper } from '../../providers/scrapper';
-import { ShowDetails } from '../show/show.component';
+import { ShowPage } from '../show/show.page';
 import { ConfigProvider } from '../../config/config.provider';
 
 @Component({
-  selector: 'page-home',
-  templateUrl: 'home.html',
+  selector: 'page-catalog',
+  templateUrl: 'catalog.html',
   providers: [
     Catalog,
     Scrapper
   ]
 })
-export class Home {
+export class CatalogPage {
   newItems: Array<any> = [];
-  page:number = 0;
-  error:Toast;
+  page: number = 0;
+  error: Toast;
   loading: Loading;
   public goToShowCallback: Function;
 
-  constructor(public navCtrl: NavController, 
-    public catalogService: Catalog, 
-    public loadingCtrl: LoadingController, 
+  constructor(public navCtrl: NavController,
+    public catalogService: Catalog,
+    public loadingCtrl: LoadingController,
     public toastCtrl: ToastController,
-    public config:ConfigProvider) {}
+    public config: ConfigProvider) { }
 
-  public ngOnInit():void {
+  public ngOnInit(): void {
     this.loading = this.createLoader();
     this.loading.present();
     this.getCatalog()
@@ -36,46 +36,46 @@ export class Home {
   }
 
   ionViewWillLeave() {
-    if(this.error) {
+    if (this.error) {
       // Prevent onDidDismiss to call again getCatalog.
-      this.error.onDidDismiss(()=>{});
-      
+      this.error.onDidDismiss(() => { });
+
       this.error.dismiss();
     }
   }
 
-  getCatalog():Promise<any> {
+  getCatalog(): Promise<any> {
     return this.config.get().then(config => this.catalogService
       .find(config.provider, this.page)
       .then(newItems => {
         this.page++;
         this.newItems = newItems;
         return Promise.resolve();
-    }));
+      }));
   }
 
-  goToShow(event, show):void  {
-    this.navCtrl.push(ShowDetails, {
+  goToShow(event, show): void {
+    this.navCtrl.push(ShowPage, {
       showLink: show.link
     });
   }
 
-  loadMore(infiniteScroll):void  {
+  loadMore(infiniteScroll): void {
     this.getCatalog()
       .then(() => infiniteScroll.complete())
       .catch(error => {
         infiniteScroll.complete();
         this.handleError(error);
-      });       
+      });
   }
 
-  createLoader():Loading  {
+  createLoader(): Loading {
     return this.loadingCtrl.create({
       content: 'Loading data...'
     });
   }
 
-  handleError(message: any):void {
+  handleError(message: any): void {
     this.loading.dismiss();
     this.error = this.toastCtrl.create({
       message: message,
@@ -84,9 +84,9 @@ export class Home {
       showCloseButton: true
     });
 
-    this.error.onDidDismiss(()=> {
+    this.error.onDidDismiss(() => {
       this.getCatalog()
-      .catch(this.handleError.bind(this));
+        .catch(this.handleError.bind(this));
     });
 
     this.error.present();

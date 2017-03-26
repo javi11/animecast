@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { Events } from 'ionic-angular';
-import { ConfigProvider } from '../../../config/config.provider';
+import { ConfigProvider } from '../../config/config.provider';
 
 /*
   Generated class for the EpisodeService provider.

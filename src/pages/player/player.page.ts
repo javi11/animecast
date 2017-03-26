@@ -1,7 +1,7 @@
 import { Component, trigger, state, style, transition, animate } from '@angular/core';
 import { NavController, NavParams, Loading, LoadingController, AlertController, Platform } from 'ionic-angular';
 import { Episode } from '../../providers/Episode';
-import { EpisodeService } from '../../pages/show/episodes/episodes.service';
+import { EpisodeService } from '../episodes/episodes.service';
 import { VgAPI } from 'videogular2/core';
 import { ScreenOrientation, } from 'ionic-native';
 import { ConfigProvider } from '../../config/config.provider';
@@ -37,7 +37,7 @@ declare var AndroidFullScreen: any;
     ])
   ]
 })
-export class PlayerComponent {
+export class PlayerPage {
   episode: any = {};
   options: any = [];
   loading: Loading;

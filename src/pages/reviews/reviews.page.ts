@@ -9,4 +9,4 @@ import { Component } from '@angular/core';
   </ion-header>
   <ion-content>Tab 1</ion-content>`
 })
-export class Reviews {}
+export class ReviewsPage { }
