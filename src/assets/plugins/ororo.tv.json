@@ -1,6 +1,7 @@
 {
   "url": "https://ororo.tv",
   "catalog": {
+    "pagination": false,
     "url": "https://ororo.tv",
     "startTag": ".show",
     "scrapper": {

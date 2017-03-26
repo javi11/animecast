@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { IonicApp, IonicModule } from 'ionic-angular';
-import { Storage } from '@ionic/storage';
+import { IonicStorageModule } from '@ionic/storage';
 import { MyApp } from './app.component';
 import { Home } from '../pages/home/home';
 import { ShowDetails } from '../pages/show/show.component';
-import { DetailsComponent } from '../pages/show/details/details.component';
-import { EpisodesComponent } from '../pages/show/episodes/episodes.component';
+import { DetailsComponent } from '../pages/details/details.component';
+import { EpisodesComponent } from '../pages/episodes/episodes.component';
 import { ElasticHeader } from '../components/elastic-header/elastic-header';
 import { Gallery } from '../components/gallery/gallery';
 import { Scrapper } from '../providers/scrapper';
@@ -14,18 +14,14 @@ import { ConfigProvider } from '../config/config.provider';
 import './rxjs-extensions';
 
 //Video Player
-import {VgCoreModule} from 'videogular2/core';
-import {VgControlsModule} from 'videogular2/controls';
-import {VgOverlayPlayModule} from 'videogular2/overlay-play';
-import {VgBufferingModule} from 'videogular2/buffering';
-import {PlayerComponent} from '../pages/player/player.component';
+import { VgCoreModule } from 'videogular2/core';
+import { VgControlsModule } from 'videogular2/controls';
+import { VgOverlayPlayModule } from 'videogular2/overlay-play';
+import { VgBufferingModule } from 'videogular2/buffering';
+import { PlayerComponent } from '../pages/player/player.component';
 import { TrackSelector } from '../components/player/track-selector';
 import { OverlayPlay } from '../components/player/overlay-play';
 import { AspectRatioButton } from '../components/player/aspect-ratio-button';
-
-export function provideStorage() {
-  return new Storage(['sqlite', 'websql', 'indexeddb'], { name: '__animecast' });
-}
 
 @NgModule({
   declarations: [
@@ -44,14 +40,14 @@ export function provideStorage() {
   providers: [
     ConfigProvider,
     Scrapper,
-    ProvidersHelpers,
-    { 
-      provide: Storage, 
-      useFactory: provideStorage 
-    }
+    ProvidersHelpers
   ],
   imports: [
     IonicModule.forRoot(MyApp),
+    IonicStorageModule.forRoot({
+      name: '__animecast',
+      driverOrder: ['indexeddb', 'sqlite', 'websql']
+    }),
     VgCoreModule,
     VgControlsModule,
     VgOverlayPlayModule,
@@ -67,4 +63,4 @@ export function provideStorage() {
     EpisodesComponent
   ]
 })
-export class AppModule {}
+export class AppModule { }

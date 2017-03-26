@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ElementRef, ViewEncapsulation, OnChanges, SimpleChange } from '@angular/core';
-import {VgAPI} from 'videogular2/core';
+import { VgAPI } from 'videogular2/core';
 
 @Component({
     selector: 'overlay-play',
@@ -11,7 +11,7 @@ import {VgAPI} from 'videogular2/core';
             </div>
             <div [hidden]="!aspectRatio" class="aspect-ratio">Aspect Ratio: {{aspectRatio}}</div>
         </div>`,
-    styles: [ `
+    styles: [`
         overlay-play {
             z-index: 220;
         }
@@ -71,21 +71,21 @@ export class OverlayPlay implements OnInit, OnChanges {
     @Input() aspectRatio: string;
     elem: HTMLElement;
     target: any;
-    VG_ENDED:string = 'ended';
-    VG_PAUSED:string = 'paused';
-    VG_PLAYING:string = 'playing';
-    VG_LOADING:string = 'waiting';
-    hideTimeout:number = 2000;
-    inactivityTimeout:any;
+    VG_ENDED: string = 'ended';
+    VG_PAUSED: string = 'paused';
+    VG_PLAYING: string = 'playing';
+    VG_LOADING: string = 'waiting';
+    hideTimeout: number = 2000;
+    inactivityTimeout: any;
 
     constructor(ref: ElementRef, public API: VgAPI) {
         this.elem = ref.nativeElement;
     }
 
     ngOnInit() {
-      this.API.playerReadyEvent.subscribe(() => this.onPlayerReady());
-      // Remove aspect ratio message on load.
-      this.aspectRatio = '';
+        this.API.playerReadyEvent.subscribe(() => this.onPlayerReady());
+        // Remove aspect ratio message on load.
+        this.aspectRatio = '';
     }
 
     onPlayerReady() {
@@ -106,8 +106,8 @@ export class OverlayPlay implements OnInit, OnChanges {
         }
     }
 
-    ngOnChanges(changes: {[propKey: string]: SimpleChange}) {
-        if(changes['aspectRatio']) {
+    ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
+        if (changes['aspectRatio']) {
             this.inactivityTimeout && clearTimeout(this.inactivityTimeout);
             this.aspectRatio = changes['aspectRatio'].currentValue;
             this.inactivityTimeout = setTimeout(() => {
@@ -122,7 +122,7 @@ export class OverlayPlay implements OnInit, OnChanges {
         if (this.target) {
             if (this.target.state instanceof Array) {
                 for (let i = 0, l = this.target.state.length; i < l; i++) {
-                    if (this.target.state[ i ] === this.VG_PLAYING) {
+                    if (this.target.state[i] === this.VG_PLAYING) {
                         state = this.VG_PLAYING;
                         break;
                     }

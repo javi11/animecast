@@ -10,20 +10,20 @@ import { Component, Output, EventEmitter, ViewEncapsulation } from '@angular/cor
   selector: 'aspect-ratio-button',
   encapsulation: ViewEncapsulation.None,
   template: `<div class="item buttom" (click)="changeAspectRatio($event)">
-  <ion-icon name="expand"></ion-icon>
+   <ion-icon ios="ios-expand" md="ios-expand"></ion-icon>
 </div>`
 })
 export class AspectRatioButton {
 
   text: string;
-  aspectRatios:Array<string> = ['contain','fill','cover','scale-down'];
-  selectedAspectRatio:number = 0;
+  aspectRatios: Array<string> = ['contain', 'fill', 'cover', 'scale-down'];
+  selectedAspectRatio: number = 0;
   @Output() onSelectAspectRatio: EventEmitter<any> = new EventEmitter();
 
-  constructor() {}
+  constructor() { }
 
   changeAspectRatio() {
-    if(this.selectedAspectRatio === this.aspectRatios.length-1) {
+    if (this.selectedAspectRatio === this.aspectRatios.length - 1) {
       this.selectedAspectRatio = 0;
     } else {
       this.selectedAspectRatio = this.selectedAspectRatio + 1;

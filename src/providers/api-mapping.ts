@@ -13,8 +13,8 @@ export class ApiMapping {
 
   private plugin: any;
 
-  constructor() {}
-  
+  constructor() { }
+
   setPlugin(plugin: any) {
     this.plugin = plugin;
   }
@@ -23,32 +23,32 @@ export class ApiMapping {
     return this.plugin;
   }
 
-  public startMapping(data: any):Array<any> {
+  public startMapping(data: any): Array<any> {
     let result: Array<any> = [],
-      mappedKeys:any = this.plugin.api;
-    const transform:any = this.plugin.transform;
+      mappedKeys: any = this.plugin.api;
+    const transform: any = this.plugin.transform;
 
-    if(!data) {
-      console.error('data is empty on', mappedKeys);
+    if (!data) {
+      console.error('api-mapping--> data is empty on', mappedKeys);
       return [];
     }
 
     // Reverse key value
     mappedKeys = _.invert(mappedKeys);
-    
-    data = data[this.plugin.startTag];
-    result = data && (Array.isArray(data) ? data.map((element) =>  _.mapKeys(element, (value, key) =>  mappedKeys[key])) : _.mapKeys(data, (value, key) =>  mappedKeys[key]))
 
-    if(transform) {
-      Object.keys(transform).forEach(transformation =>{
+    data = data[this.plugin.startTag];
+    result = data && (Array.isArray(data) ? data.map((element) => _.mapKeys(element, (value, key) => mappedKeys[key])) : _.mapKeys(data, (value, key) => mappedKeys[key]))
+
+    if (transform) {
+      Object.keys(transform).forEach(transformation => {
         result.forEach((item, $index) => {
-            try {
-              let compiled = _.template(transform[transformation]);
-              item[transformation] = compiled(item);
-              result[$index] = item;
-            } catch(err) {
-              console.error('Error on transformation, ', transformation, err);
-            }
+          try {
+            let compiled = _.template(transform[transformation]);
+            item[transformation] = compiled(item);
+            result[$index] = item;
+          } catch (err) {
+            console.error('api-mapping--> Error on transformation, ', transformation, err);
+          }
         });
       });
     }

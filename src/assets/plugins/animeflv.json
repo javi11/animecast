@@ -1,20 +1,18 @@
 {
+  "broken": true,
   "url": "http://animeflv.net",
   "catalog": {
-    "url": "http://animeflv.net/animes/?escritorio=1",
-    "startTag": "div.aboxy_lista",
+    "url": "http://animeflv.net/browse",
+    "startTag": ".ListAnimes li",
     "pagination": "p",
     "limit": 20,
-    "transform": {
-      "link": "<%= link %>/?escritorio=1"
-    },
     "scrapper": {
-      "title": ".titulo@html",
-      "image": ".portada@data-original",
-      "link": ".titulo@href",
-      "description": ".sinopsis@html",
+      "title": ".Title a@html",
+      "image": ".Image a img@src",
+      "link": ".Title a@href",
+      "description": ".mCSB_container p@html",
       "categories": {
-        "startTag": "div.generos_links a",
+        "startTag": ".Tags a",
         "scrapper": {
           "name": "@html",
           "link": "@href"

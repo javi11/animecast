@@ -28,7 +28,6 @@ export class Episode {
         } else {
           scrapper = new ApiMapping();
         }
-        console.log(plugin.episode);
         scrapper.setPlugin(plugin.episode);
         let headers = new Headers({ 'X-Requested-With': 'XMLHttpRequest' });
         let options = new RequestOptions({ headers: headers });

@@ -27,17 +27,16 @@
 
       <vg-scrub-bar style="pointer-events: none;"></vg-scrub-bar>
 
-      <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
       <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
 
       <track-selector></track-selector>
       <aspect-ratio-button (onSelectAspectRatio)="changueAspectRatio($event)"></aspect-ratio-button>
+      <vg-fullscreen *ngIf="platform.is('core')"></vg-fullscreen>
     </vg-controls>
 
-    <video vgMedia #media id="singleVideo" preload="auto" class="videoPlayer" autoplay [ngStyle]="{'object-fit': aspectRatio}">
-      <source *ngFor="let video of sources" [src]="video.src" [type]="video.type">
-      <track label="EN" kind="subtitles" srclang="en" src="https://raw.githubusercontent.com/andreyvit/subtitle-tools/master/sample.srt" default>
-      <track label="ES" kind="subtitles" srclang="es" src="https://raw.githubusercontent.com/andreyvit/subtitle-tools/master/sample.srt">
+    <video #myMedia [vgMedia]="myMedia" [vgMaster]="true" id="singleVideo" preload="auto" autoplay class="videoPlayer" [ngStyle]="{'object-fit': aspectRatio}">
+      <source *ngFor="let source of sources" [src]="source.src" [type]="source.type">
+      <track *ngFor="let subtitule of subtitules" kind="subtitles" srclang="subtitule.language" label="subtitule.label" src="subtitule.src">
     </video>
   </vg-player>
 </ion-content>

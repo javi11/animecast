@@ -46,17 +46,17 @@ export class Scrapper {
     }
 
     if (!startHtml) {
-      console.error(`${find.startTag} not found on the html`);
+      console.info(`scrapper--> ${find.startTag} not found on the html`);
       return [];
     }
 
     find = find.scrapper;
-
     startHtml.each((index, item) => {
       let jqueryItem = root ? data : jquery(item);
       let element = <any>{};
 
       Object.keys(find).forEach((key) => {
+
         if (typeof find[key] === 'object') {
           element[key] = this.scrappe(item, find[key], allHtml);
         } else {
@@ -67,7 +67,7 @@ export class Scrapper {
           } else {
             let [findTag, extract] = find[key].split('@');
             if (!extract) {
-              console.error('No tag @ found on ', key);
+              console.info('scrapper--> No tag @ found on ', key);
               return [];
             }
             let item = findTag ? jqueryItem.find(findTag) : jqueryItem;
@@ -85,7 +85,7 @@ export class Scrapper {
             item[transformation] = compiled(item);
             result[$index] = item;
           } catch (err) {
-            console.error('Error on transformation, ', transformation, err);
+            console.info('scrapper--> Error on transformation, ', transformation, err);
           }
         });
       });

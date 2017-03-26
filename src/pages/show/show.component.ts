@@ -3,9 +3,9 @@ import { Catalog } from '../../providers/Catalog';
 import { NavParams, LoadingController, Loading, ToastController, Toast } from 'ionic-angular';
 import { Show } from './show';
 import { ShowService } from './show.service';
-import { EpisodeService } from './episodes/episodes.service';
-import { DetailsComponent } from './details/details.component';
-import { EpisodesComponent } from './episodes/episodes.component';
+import { EpisodeService } from '../episodes/episodes.service';
+import { DetailsComponent } from '../details/details.component';
+import { EpisodesComponent } from '../episodes/episodes.component';
 import { ConfigProvider } from '../../config/config.provider';
 //import { Reviews } from './reviews';
 
@@ -33,29 +33,29 @@ import { ConfigProvider } from '../../config/config.provider';
 })
 export class ShowDetails {
   show: Show = {};
-  loading:Loading;
-  error:Toast;
+  loading: Loading;
+  error: Toast;
   tab1: any = DetailsComponent;
   tab2: any = EpisodesComponent;
   //tab3: any = Reviews;
 
   constructor(public navParams: NavParams,
-   public loadingCtrl: LoadingController,
-   public catalogService: Catalog,
-   public showService:ShowService,
-   public episodeService:EpisodeService,
-   private details:DetailsComponent, 
-   public toastCtrl: ToastController,
-    public config:ConfigProvider) {}
+    public loadingCtrl: LoadingController,
+    public catalogService: Catalog,
+    public showService: ShowService,
+    public episodeService: EpisodeService,
+    private details: DetailsComponent,
+    public toastCtrl: ToastController,
+    public config: ConfigProvider) { }
 
   ngOnInit() {
     this.getShow()
       .catch(this.handleError.bind(this));
   }
 
-  getShow():Promise<any> {
+  getShow(): Promise<any> {
     this.loading = this.createLoader();
-    
+
     this.loading.present();
     return this.config.get().then(config => this.catalogService
       .findById(config.provider, this.navParams.get('showLink'))
@@ -65,12 +65,12 @@ export class ShowDetails {
         this.show.link = this.navParams.get('showLink');
         this.showService.showLoaded(this.show);
         this.loading.dismiss();
-    }));
+      }));
   }
 
-  populateEpisodeData(show): Promise<Show>{
+  populateEpisodeData(show): Promise<Show> {
     return new Promise((resolve, reject) => {
-      if(show.episodes && show.episodes.length > 0) {
+      if (show.episodes && show.episodes.length > 0) {
         return this.episodeService.getEpisodes(this.navParams.get('showLink')).then(episodes => {
           episodes && episodes.length > 0 && episodes.forEach(episode => {
             const episodeIndex = show.episodes.findIndex(item => item.link === episode.id);
@@ -90,7 +90,7 @@ export class ShowDetails {
     });
   }
 
-  handleError(message: any):void {
+  handleError(message: any): void {
     this.loading.dismiss();
     this.error = this.toastCtrl.create({
       message: message,
@@ -99,9 +99,9 @@ export class ShowDetails {
       showCloseButton: true
     });
 
-    this.error.onDidDismiss(()=> {
+    this.error.onDidDismiss(() => {
       this.getShow()
-      .catch(this.handleError.bind(this));
+        .catch(this.handleError.bind(this));
     });
 
     this.error.present();

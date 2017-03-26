@@ -11,16 +11,16 @@ import { DefaultConfig } from './defaultConfig';
 @Injectable()
 export class ConfigProvider {
 
-  config:any;
+  config: any;
 
-  constructor(public storage: Storage) {}
+  constructor(public storage: Storage) { }
 
-  set(config:any):Promise<any> {
-    return this.storage.set('config', config);
+  set(config: any): Promise<any> {
+    return this.storage.ready().then(() => this.storage.set('config', config));
   }
 
-  get():Promise<any> {
-    return this.storage.get('config').then(config => !config ? this.storage.set('config', DefaultConfig) : Promise.resolve(config));
+  get(): Promise<any> {
+    return this.storage.ready().then(() => this.storage.get('config').then(config => !config ? this.storage.set('config', DefaultConfig) : Promise.resolve(config)));
   }
-  
+
 }

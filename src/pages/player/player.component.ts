@@ -6,6 +6,8 @@ import { VgAPI } from 'videogular2/core';
 import { ScreenOrientation, } from 'ionic-native';
 import { ConfigProvider } from '../../config/config.provider';
 
+declare var AndroidFullScreen: any;
+
 /*
   Generated class for the Player component.
 
@@ -42,6 +44,7 @@ export class PlayerComponent {
   error: any;
   videoAngular2Api: VgAPI;
   sources: any = [];
+  subtitules: any = [];
   updating: boolean = false;
 
   // Player controls
@@ -61,7 +64,12 @@ export class PlayerComponent {
     public config: ConfigProvider) { }
 
   ngOnInit() {
-    this.platform.ready().then(() => !this.platform.is('core') && ScreenOrientation.lockOrientation('landscape'));
+    this.platform.ready().then(() => {
+      if (!this.platform.is('core')) {
+        ScreenOrientation.lockOrientation('landscape');
+        AndroidFullScreen.immersiveMode(() => { }, (error) => this.error = error);
+      }
+    });
 
     this.loading = this.createLoader();
     this.loading.present();
@@ -80,7 +88,10 @@ export class PlayerComponent {
   }
 
   ngOnDestroy() {
-    this.platform.ready().then(() => !this.platform.is('core') && ScreenOrientation.lockOrientation('portrait'));
+    if (!this.platform.is('core')) {
+      ScreenOrientation.lockOrientation('portrait');
+      AndroidFullScreen.showSystemUI(() => { }, (error) => this.error = error);
+    }
   }
 
   showControls() {
@@ -112,6 +123,16 @@ export class PlayerComponent {
         thumb: episode.thumb
       }];
     }
+
+    if (episode.subtitules) {
+      this.subtitules = episode.subtitules.map((subtitule) => {
+        return {
+          src: subtitule.src,
+          label: subtitule.label,
+          language: subtitule.language
+        }
+      });
+    }
   }
 
   createLoader() {
@@ -125,7 +146,6 @@ export class PlayerComponent {
   }
 
   seekVideo(): void {
-    this.videoAngular2Api.isLive = false;
     this.videoAngular2Api.getDefaultMedia().currentTime = this.episode.currentTime || 0;
   }
 
@@ -133,7 +153,7 @@ export class PlayerComponent {
     // keep visible the controls
     this.inactivityTimeout && clearTimeout(this.inactivityTimeout);
     this.controlsVisible = 'shown';
-    if (this.updating) {
+    if (!this.updating) {
       const mediaData = this.getMediaData();
       this.updating = true;
       this.episodeService.updateEpisodeStatus(this.navParams.get('showLink'), mediaData).then(() => this.updating = false);
