@@ -58,6 +58,7 @@ export class Scrapper {
       Object.keys(find).forEach((key) => {
 
         if (typeof find[key] === 'object') {
+          console.info(item);
           element[key] = this.scrappe(item, find[key], allHtml);
         } else {
           if (this.isRegex(find[key])) {
